@@ -4,15 +4,25 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-
+	"rentbook/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+
+func migrate(db *gorm.DB) {
+	db.AutoMigrate(&model.Buku{})
+	// db.AutoMigrate(&model.Rent{})
+	db.AutoMigrate(&model.User{})
+}
+
 func conn() (*gorm.DB, error) {
 	dsn := "root:@tcp(localhost:3306)/rent-book?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	return db, err
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }
 
 func Logout() {
@@ -68,7 +78,7 @@ func main() {
 		case 9:
 			Logout()
 			isRunning = false
-			fmt.Println("\t---Sampai Berjumpa Kembali---\n")
+			fmt.Println("\t---Sampai Berjumpa Kembali---")
 			fmt.Println("\t ---- Rent Book ----")
 			fmt.Println("Login")
 			fmt.Scanln(Login())
