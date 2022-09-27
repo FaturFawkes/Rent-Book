@@ -63,12 +63,12 @@ func main() {
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(login)")
-		fmt.Println("3.Daftar Buku")
-		fmt.Println("3.Pinjam Buku (login)")
-		fmt.Println("4.Lihat Buku Saya (login)")
-		fmt.Println("5.Pinjam buku teman (login)")
-		fmt.Println("6.Register")
-		fmt.Println("7.Logout")
+		fmt.Println("3.Hapus Profile(login)")
+		fmt.Println("4.Daftar Buku")
+		fmt.Println("5.Pinjam Buku (login)")
+		fmt.Println("6.Pinjam buku teman (login)")
+		fmt.Println("7.Register")
+		fmt.Println("8.Logout")
 		fmt.Println("")
 		fmt.Println("Pilih Menu : ")
 		fmt.Scanln(&inputMenu)
@@ -86,7 +86,34 @@ func main() {
 				session = res[0]
 				fmt.Println(session.Nama)
 			}
-		case 6:
+		case 2:
+			var update model.User
+			var cekLogin = true
+			if session.ID == 0 {
+				cekLogin = false
+			}
+			if cekLogin == true {
+				fmt.Println("Nama : ")
+				fmt.Scanln(&update.Nama)
+				fmt.Println("Username : ")
+				fmt.Scanln(&update.Username)
+				fmt.Println("Password : ")
+				fmt.Scanln(&update.Password)
+				fmt.Println("Email : ")
+				fmt.Scanln(&update.Email)
+				fmt.Println("Alamat : ")
+				fmt.Scanln(&update.Alamat)
+				fmt.Println("Status : ")
+				fmt.Scanln(&update.Status)
+				update.ID = session.ID
+				_, err := userControll.Update(update)
+				if err != nil {
+					fmt.Println("gagal update")
+				} else {
+					fmt.Println(session.ID)
+				}
+			}
+		case 7:
 			var user model.User
 			fmt.Println("Nama : ")
 			fmt.Scanln(&user.Nama)
@@ -106,7 +133,7 @@ func main() {
 			} else {
 				fmt.Println(session.Nama)
 			}
-		case 7:
+		case 8:
 			Logout()
 			session = model.User{}
 

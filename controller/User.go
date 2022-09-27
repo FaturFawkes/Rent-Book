@@ -26,3 +26,11 @@ func (us UserController) Insert(data model.User) (model.User, error) {
 	}
 	return res, nil
 }
+
+func (us UserController) Update(data model.User) (model.User, error) {
+	res, err := us.User.Update(data)
+	if err != nil {
+		return model.User{}, err
+	}
+	return res, nil
+}

@@ -30,7 +30,7 @@ func (us UserModel) Login(username, password string) ([]User, error) {
 }
 
 func (us UserModel) Insert(newRegister User) (User, error) {
-	err := us.DB.Save(&newRegister).Error
+	err := us.DB.Create(&newRegister).Error
 	if err != nil {
 		fmt.Println("error on insert", err.Error())
 		return User{}, err
@@ -38,12 +38,10 @@ func (us UserModel) Insert(newRegister User) (User, error) {
 	return newRegister, nil
 }
 
-// func (us UserModel) Insert(nama, username, password, email, alamat, status string) ([]User, error) {
-// 	var res []User
-// 	err := us.DB.Save("nama",)
-// 	if err != nil {
-// 		fmt.Println("error on insert", err.Error())
-// 		return User{}, err
-// 	}
-// 	return newRegister, nil
-// }
+func (us UserModel) Update(updateUser User) (User, error) {
+	err := us.DB.Save(&updateUser).Error
+	if err != nil {
+		return User{}, err
+	}
+	return updateUser, nil
+}
