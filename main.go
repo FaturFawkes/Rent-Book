@@ -12,9 +12,10 @@ import (
 )
 
 func migrate(db *gorm.DB) {
-	db.AutoMigrate(&model.Buku{})
-	db.AutoMigrate(&model.Rent{})
-	db.AutoMigrate(&model.User{})
+	// db.AutoMigrate(&model.Buku{})
+	// db.AutoMigrate(&model.Rent{})
+	// db.AutoMigrate(&model.User{})
+
 }
 
 func conn() (*gorm.DB, error) {
@@ -51,10 +52,12 @@ func main() {
 		fmt.Println("error", err.Error())
 	}
 	
-	migrate(conn)
+	// migrate(conn)
 	session := model.User{}
 	userModel := model.UserModel{conn}
 	userControll := controller.UserController{userModel}
+	bukuModel := model.BukuModel{conn}
+	bukuControll := controller.BukuController{bukuModel}
 
 	for isRunning {
 		var inputMenu int
@@ -63,15 +66,16 @@ func main() {
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(login)")
-		fmt.Println("3.Daftar Buku")
-		fmt.Println("3.Pinjam Buku (login)")
-		fmt.Println("4.Lihat Buku Saya (login)")
-		fmt.Println("5.Pinjam buku teman (login)")
-		fmt.Println("6.Register")
-		fmt.Println("7.Logout")
+		fmt.Println("3.Buku Saya (login)")
+		fmt.Println("4.Daftar Buku")
+		fmt.Println("5.Pinjam Buku (login)")
+		fmt.Println("6.Lihat Buku Saya (login)")
+		fmt.Println("7.Register")
+		fmt.Println("8.Logout")
 		fmt.Println("")
-		fmt.Println("Pilih Menu : ")
+		fmt.Print("Pilih Menu : ")
 		fmt.Scanln(&inputMenu)
+		fmt.Println("")
 		switch inputMenu {
 		case 1:
 			var login model.User
@@ -81,9 +85,71 @@ func main() {
 			fmt.Scanln(&login.Password)
 			res, err := userControll.Login(login.Username, login.Password)
 			if err != nil {
-				fmt.Println("gagal login")
+				fmt.Println("Erro query logn - main", err.Error())
 			}
-			session = res[0]
+			count := len(res)
+			if count == 0 {
+				fmt.Println("++++ Username atau password salah ++++")
+			} else {
+				session = res[0]
+				fmt.Println("++++ Login Berhasil! ++++")
+			}
+		case 3 :
+			var bukuSaya = true
+			var pilih int
+			if session.ID == 0 {
+				bukuSaya = false
+				fmt.Println("+++Silahkan login terlebih dahulu+++")
+			}
+			for bukuSaya {
+				fmt.Println("tapilkan semua buku saya")
+				fmt.Println("")
+				fmt.Println("1. Tambah Buku")
+				fmt.Println("2. Edit Buku")
+				fmt.Println("3. Hapus Buku")
+				fmt.Println("Masukkan Pilihan : ")
+				fmt.Scanln(&pilih)
+
+				var buku model.Buku
+				if pilih == 1 {
+					fmt.Print("Judul : ")
+					fmt.Scanln(&buku.Judul)
+					fmt.Println("Penulis : ")
+					fmt.Scanln(&buku.Penulis)
+					fmt.Print("Penerbit : ")
+					fmt.Scanln(&buku.Penerbit)
+					fmt.Print("Tahun Terbit : ")
+					fmt.Scanln(&buku.Th_terbit)
+					fmt.Println(buku.Judul)
+					bukuControll.TambahBuku(buku)
+					// res := bukuControll.TambahBuku(buku)
+					// if res < 1 {
+					// 	fmt.Println("Buku gagal ditambahkan")
+					// } else {
+					// 	fmt.Println("Buku berhasil ditambahkan")
+					// 	bukuSaya = false
+					// }
+				} else if pilih == 2 {
+
+				} else if pilih == 3 {
+
+				} else {
+					bukuSaya = false
+				}
+			}
+		case 4 :
+			res, err := bukuControll.GetAll()
+			if err != nil {
+				fmt.Print("Gagal ambil data buku", err.Error())
+			}
+			fmt.Print("No")
+			fmt.Print("\tJudul")
+			fmt.Println("\t\t\tPenulis")
+			for i := 0; i < len(res); i++ {
+				fmt.Print(i+1)
+				fmt.Print("\t",res[i].Judul)
+				fmt.Print("\t",res[i].Penulis,"\n")
+			}
 		}
 	}
 }

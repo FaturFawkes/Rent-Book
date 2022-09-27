@@ -13,3 +13,4 @@ func (us UserController) Login(username, password string) ([]model.User, error) 
 	}
 	return res, nil
 }
+

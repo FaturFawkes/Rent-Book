@@ -16,3 +16,20 @@ type Buku struct {
 type BukuModel struct {
 	 DB *gorm.DB
 }
+
+func (bm BukuModel) GetAll() ([]Buku, error) {
+	var res []Buku
+	err := bm.DB.Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (bm BukuModel) TambahBuku(book Buku) (Buku, error) {
+	err := bm.DB.Save(&book).Error
+	if err != nil {
+		return Buku{}, err
+	}
+	return book, nil
+}
