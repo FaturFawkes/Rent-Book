@@ -7,8 +7,8 @@ import (
 
 type Rent struct {
 	gorm.Model
-	Id_user     int 
-	Id_buku     int 
+	Id_user     int `gorm:"type:int(11)"`
+	Id_buku     int `gorm:"type:int(11)"`
 	Tgl_pinjam  time.Time
 	Tgl_kembali time.Time
 }

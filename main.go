@@ -62,12 +62,13 @@ func main() {
 		fmt.Println("===== RENTAL BUKU =====")
 		fmt.Println("")
 		fmt.Println("1.Login")
-		fmt.Println("2.Update Profile (login)")
+		fmt.Println("2.Update Profile(login)")
 		fmt.Println("3.Daftar Buku")
-		fmt.Println("3.Pinjam Buku")
-		fmt.Println("4.Lihat Buku Saya")
-		fmt.Println("5.Pinjam buku teman")
+		fmt.Println("3.Pinjam Buku (login)")
+		fmt.Println("4.Lihat Buku Saya (login)")
+		fmt.Println("5.Pinjam buku teman (login)")
 		fmt.Println("6.Register")
+		fmt.Println("7.Logout")
 		fmt.Println("")
 		fmt.Println("Pilih Menu : ")
 		fmt.Scanln(&inputMenu)
@@ -83,7 +84,6 @@ func main() {
 				fmt.Println("gagal login")
 			}
 			session = res[0]
-			fmt.Println(session)
 		}
 	}
 }
