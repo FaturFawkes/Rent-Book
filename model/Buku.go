@@ -42,3 +42,22 @@ func (bm BukuModel) UpdateBuku(book Buku) (Buku, error) {
 	}
 	return book, nil
 }
+
+func (bm BukuModel) MyBook(id uint) ([]Buku, error) {
+	// var book Buku
+	// fmt.Println(book.ID_user)
+	var res []Buku
+	err := bm.DB.Where("id_user = ?", id).Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (bm BukuModel) DeleteBuku(id uint) (Buku, error) {
+	err := bm.DB.Delete(&Buku{}, id).Error
+	if err != nil {
+		return Buku{}, err
+	}
+	return Buku{}, nil
+}

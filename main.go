@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"rentbook/controller"
 	"rentbook/model"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -111,12 +113,31 @@ func main() {
 			}
 			clear()
 			for bukuSaya {
-				fmt.Println("tapilkan semua buku saya")
+				// Tampilkan Semua Buku Say
+				var sessId = session.ID
+				res, _ := bukuControll.MyBook(sessId)
+				fmt.Println("\t===== DAFTAR BUKU SAYA =====")
+				fmt.Print("No")
+				fmt.Print("\tKode")
+				fmt.Print("\tJudul")
+				fmt.Print("\tPenulis")
+				fmt.Print("\tPenerbit")
+				fmt.Print("\tTahun Terbit\n")
+
+				for i := 0; i < len(res); i++ {
+					fmt.Print(i+1)
+					fmt.Print("\t",res[i].ID)
+					fmt.Print("\t",res[i].Judul)
+					fmt.Print("\t",res[i].Penulis)
+					fmt.Print("\t",res[i].Penerbit)
+					fmt.Print("\t",res[i].Th_terbit,"\n")
+				}
 				fmt.Println("")
+				fmt.Println("====== Sub Menu ======")
 				fmt.Println("1. Tambah Buku")
 				fmt.Println("2. Edit Buku")
 				fmt.Println("3. Hapus Buku")
-				fmt.Println("4. Kembali")
+				fmt.Println("9. Kembali")
 				fmt.Print("Masukkan Pilihan : ")
 				fmt.Scanln(&pilih)
 				fmt.Println("")
@@ -136,7 +157,8 @@ func main() {
 					if err != nil {
 						fmt.Println("Error insert buku", err.Error())
 					} else {
-						fmt.Println("Buku Berhasil Ditambahkan!")
+						fmt.Println("Buku berhasil ditambahkan!")
+						time.Sleep(3 * time.Second)
 						clear()
 					}
 				} else if pilih == 2 {
@@ -155,11 +177,22 @@ func main() {
 					if err != nil {
 						fmt.Println("Error update buku", err.Error())
 					} else {
-						fmt.Println("Buku berhasil diupdate")
+						fmt.Println("Buku berhasil diupdate!")
+						time.Sleep(3 * time.Second)
 						clear()
 					}
 				} else if pilih == 3 {
-
+						var buku model.Buku
+						fmt.Print("Kode Buku : ")
+						fmt.Scanln(&buku.ID)
+						_, err := bukuControll.DeleteBuku(buku.ID)
+						if err != nil {
+							fmt.Println("Error hapus", err.Error())
+						} else {
+							fmt.Println("Buku berhasil dihapus!")
+							time.Sleep(3 * time.Second)
+							clear()
+						}
 				} else {
 					bukuSaya = false
 					clear()
