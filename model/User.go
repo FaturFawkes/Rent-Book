@@ -45,3 +45,11 @@ func (us UserModel) Update(updateUser User) (User, error) {
 	}
 	return updateUser, nil
 }
+
+func (us UserModel) Delete(deleteUser User) (User, error) {
+	err := us.DB.Delete(&deleteUser).Error
+	if err != nil {
+		return User{}, err
+	}
+	return deleteUser, nil
+}

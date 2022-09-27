@@ -17,8 +17,6 @@ func (us UserController) Login(username, password string) ([]model.User, error) 
 	return res, nil
 }
 
-// main(panggil func controller) ->func controller panggil func model -> func model query data
-
 func (us UserController) Insert(data model.User) (model.User, error) {
 	res, err := us.User.Insert(data)
 	if err != nil {
@@ -29,6 +27,14 @@ func (us UserController) Insert(data model.User) (model.User, error) {
 
 func (us UserController) Update(data model.User) (model.User, error) {
 	res, err := us.User.Update(data)
+	if err != nil {
+		return model.User{}, err
+	}
+	return res, nil
+}
+
+func (us UserController) Delete(data model.User) (model.User, error) {
+	res, err := us.User.Delete(data)
 	if err != nil {
 		return model.User{}, err
 	}

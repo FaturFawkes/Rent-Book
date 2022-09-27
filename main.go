@@ -113,6 +113,15 @@ func main() {
 					fmt.Println(session.ID)
 				}
 			}
+		case 3:
+			var Delete model.User
+			Delete.ID = session.ID
+			_, err := userControll.Delete(session)
+			if err != nil {
+				fmt.Println("gagal Delete")
+			} else {
+				fmt.Println(session.ID)
+			}
 		case 7:
 			var user model.User
 			fmt.Println("Nama : ")
