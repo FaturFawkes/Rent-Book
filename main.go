@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"rentbook/controller"
 	"rentbook/model"
 
 	"gorm.io/driver/mysql"
@@ -12,7 +13,7 @@ import (
 
 func migrate(db *gorm.DB) {
 	db.AutoMigrate(&model.Buku{})
-	// db.AutoMigrate(&model.Rent{})
+	db.AutoMigrate(&model.Rent{})
 	db.AutoMigrate(&model.User{})
 }
 
@@ -55,98 +56,44 @@ func Register() (nama, email, password string) {
 
 func main() {
 	var isRunning bool = true
-	var inputBook int
-	var inputBook2 int
-	_, err := conn()
+	conn, err := conn()
 	if err != nil {
 		fmt.Println("error")
 	} else {
 		fmt.Println("sukses")
 	}
+	migrate(conn)
+	session := model.User{}
+	userModel := model.UserModel{conn}
+	userControll := controller.UserController{userModel}
 
 	for isRunning {
-		fmt.Println("\t ---- Rent Book ----")
-		fmt.Println("1. Login")
-		fmt.Println("2. Register")
-		fmt.Println("3. Search Buku")
-		fmt.Println("4. Keseluruhan Buku\n")
-		fmt.Println("\tMasukkan Piliha Anda")
-		fmt.Scanln(&inputBook)
-		switch inputBook {
+		var inputMenu int
+		fmt.Println("")
+		fmt.Println("===== RENTAL BUKU =====")
+		fmt.Println("")
+		fmt.Println("1.Login")
+		fmt.Println("2.Update Profile (login)")
+		fmt.Println("3.Daftar Buku")
+		fmt.Println("3.Pinjam Buku")
+		fmt.Println("4.Lihat Buku Saya")
+		fmt.Println("5.Pinjam buku teman")
+		fmt.Println("")
+		fmt.Println("Pilih Menu : ")
+		fmt.Scanln(&inputMenu)
+		switch inputMenu {
 		case 1:
-			fmt.Println("Silahkan Login\n")
-			Login()
-			fmt.Println("\tLogin Berhasil\n")
-		case 2:
-			fmt.Println("Silahkan Registrasi\n")
-			Register()
-			fmt.Println("\tRegister Berhasil\n")
-		}
-		fmt.Println("3. Search Buku")
-		fmt.Println("4. Keseluruhan Buku")
-		fmt.Println("5. Tambah Buku")
-		fmt.Println("6. Pinjam Buku")
-		fmt.Println("7. Pencarian Buku")
-		fmt.Println("8. Detail Pinjam Buku")
-		fmt.Println("9. Pengembalian Buku")
-		fmt.Println("10. Logout")
-		fmt.Println("Masukkan Input")
-		fmt.Scanln(&inputBook)
-		Logout()
-		fmt.Println("1. Login")
-		fmt.Println("2. Register")
-		fmt.Println("3. Search Buku")
-		fmt.Println("4. Keseluruhan Buku\n")
-		fmt.Println("\tMasukkan Piliha Anda")
-		Login()
-		fmt.Scanln(&inputBook2)
-		fmt.Println("3. Search Buku")
-		fmt.Println("4. Keseluruhan Buku")
-		fmt.Println("5. Tambah Buku")
-		fmt.Println("6. Pinjam Buku")
-		fmt.Println("7. Pencarian Buku")
-		fmt.Println("8. Detail Pinjam Buku")
-		fmt.Println("9. Pengembalian Buku")
-		fmt.Println("10. Logout")
-		fmt.Println("Masukkan Input")
-		fmt.Scanln(&inputBook2)
-		switch inputBook2 {
-		case 1:
-			fmt.Println("Silahkan Login\n")
-			Login()
-			fmt.Println("\tLogin Berhasil\n")
-		case 2:
-			fmt.Println("Silahkan Registrasi\n")
-			Register()
-			fmt.Println("\tRegister Berhasil\n")
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-			Logout()
-			// fmt.Println("Login Berhasil => ENTER")
-			// fmt.Scanln(&inputBook2)
-			// fmt.Println("\t ---- Rent Book ----")
-			// fmt.Println("1. Login")
-			// fmt.Println("2. Register")
-			// fmt.Println("3. Search Buku")
-			// fmt.Println("4. Keseluruhan Buku\n")
-			// fmt.Println("\tMasukkan Piliha Anda")
-			// fmt.Scanln(&inputBook2)
-			// fmt.Println("3. Search Buku")
-			// fmt.Println("4. Keseluruhan Buku")
-			// fmt.Println("5. Tambah Buku")
-			// fmt.Println("6. Pinjam Buku")
-			// fmt.Println("7. Pencarian Buku")
-			// fmt.Println("8. Detail Pinjam Buku")
-			// fmt.Println("9. Pengembalian Buku")
-			// fmt.Println("10. Logout")
-			// fmt.Println("Masukkan Input")
-			// fmt.Scanln(&inputBook2)
+			var login model.User
+			fmt.Print("Username : ")
+			fmt.Scanln(&login.Username)
+			fmt.Print("Password :")
+			fmt.Scanln(&login.Password)
+			res, err := userControll.Login(login.Username, login.Password)
+			if err != nil {
+				fmt.Println("gagal login")
+			}
+			session = res[0]
+			fmt.Println(session)
 		}
 	}
 }
