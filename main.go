@@ -32,16 +32,6 @@ func Logout() {
 	cmd.Run()
 }
 
-func Login() (username string, password string) {
-	var us, pw string
-	fmt.Println("Masukkan User Name : ")
-	fmt.Scanln(&us)
-	fmt.Println("Masukkan Password : ")
-	fmt.Scanln(&pw)
-
-	return us, pw
-}
-
 func Register() (nama, email, password string) {
 	var na, em, pas string
 	fmt.Println("Masukkan User Name : ")
@@ -58,10 +48,9 @@ func main() {
 	var isRunning bool = true
 	conn, err := conn()
 	if err != nil {
-		fmt.Println("error")
-	} else {
-		fmt.Println("sukses")
+		fmt.Println("error", err.Error())
 	}
+	
 	migrate(conn)
 	session := model.User{}
 	userModel := model.UserModel{conn}
@@ -78,6 +67,7 @@ func main() {
 		fmt.Println("3.Pinjam Buku")
 		fmt.Println("4.Lihat Buku Saya")
 		fmt.Println("5.Pinjam buku teman")
+		fmt.Println("6.Register")
 		fmt.Println("")
 		fmt.Println("Pilih Menu : ")
 		fmt.Scanln(&inputMenu)

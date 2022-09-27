@@ -3,15 +3,14 @@ package model
 import (
 	"gorm.io/gorm"
 )
-
 type User struct {
 	gorm.Model
-	Nama       string 
-	Username   string 
-	Password   string 
-	Email      string 
-	Alamat     string
-	Status     string
+	Nama       string `gorm:"type:varchar(255)"`
+	Username   string `gorm:"type:varchar(20)"`
+	Password   string `gorm:"type:varchar(20)"`
+	Email      string `gorm:"type:varchar(50)"`
+	Alamat     string `gorm:"type:varchar(255)"`
+	Status     string 
 }
 
 type UserModel struct {
