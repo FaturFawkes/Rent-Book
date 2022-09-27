@@ -1,6 +1,9 @@
 package controller
 
-import "rentbook/model"
+import (
+	"rentbook/model"
+	// "golang.org/x/text/date"
+)
 
 type UserController struct {
 	User model.UserModel
@@ -14,3 +17,26 @@ func (us UserController) Login(username, password string) ([]model.User, error) 
 	return res, nil
 }
 
+func (us UserController) Insert(data model.User) (model.User, error) {
+	res, err := us.User.Insert(data)
+	if err != nil {
+		return model.User{}, err
+	}
+	return res, nil
+}
+
+func (us UserController) Update(data model.User) (model.User, error) {
+	res, err := us.User.Update(data)
+	if err != nil {
+		return model.User{}, err
+	}
+	return res, nil
+}
+
+func (us UserController) Delete(data model.User) (model.User, error) {
+	res, err := us.User.Delete(data)
+	if err != nil {
+		return model.User{}, err
+	}
+	return res, nil
+}

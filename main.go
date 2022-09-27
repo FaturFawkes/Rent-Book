@@ -59,8 +59,6 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
-	
-	// migrate(conn)
 	session := model.User{}
 	userModel := model.UserModel{conn}
 	userControll := controller.UserController{userModel}
@@ -74,10 +72,10 @@ func main() {
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(login)")
-		fmt.Println("3.Buku Saya (login)")
-		fmt.Println("4.Daftar Buku")
-		fmt.Println("5.Pinjam Buku (login)")
-		fmt.Println("6.Lihat Buku Saya (login)")
+    fmt.Println("3.Hapus Profile(login)")
+    fmt.Println("4.Buku Saya")
+		fmt.Println("5.Daftar Buku")
+		fmt.Println("6.Pinjam Buku (login)")
 		fmt.Println("7.Register")
 		fmt.Println("8.Logout")
 		fmt.Println("")
@@ -85,33 +83,80 @@ func main() {
 		fmt.Scanln(&inputMenu)
 		fmt.Println("")
 		switch inputMenu {
+    
+    //LOGIN
 		case 1:
-
 			var login model.User
 			fmt.Print("Username : ")
 			fmt.Scanln(&login.Username)
 			fmt.Print("Password :")
 			fmt.Scanln(&login.Password)
 			res, err := userControll.Login(login.Username, login.Password)
-			if err != nil {
-				fmt.Println("Erro query logn - main", err.Error())
-			}
 			count := len(res)
 			if count == 0 {
-				fmt.Println("++++ Username atau password salah ++++")
+				fmt.Println("++++ Username atau password salah ++++", err.Error)
+        time.Sleep(3 * time.Second)
+        clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
 				clear()
 			}
-		case 3 :
+      
+      //UPDATE USER
+      case 2:
+			var update model.User
+			var cekLogin = true
+			if session.ID == 0 {
+				cekLogin = false
+			}
+			if cekLogin == true {
+				fmt.Println("Nama : ")
+				fmt.Scanln(&update.Nama)
+				fmt.Println("Username : ")
+				fmt.Scanln(&update.Username)
+				fmt.Println("Password : ")
+				fmt.Scanln(&update.Password)
+				fmt.Println("Email : ")
+				fmt.Scanln(&update.Email)
+				fmt.Println("Alamat : ")
+				fmt.Scanln(&update.Alamat)
+				fmt.Println("Status : ")
+				fmt.Scanln(&update.Status)
+				update.ID = session.ID
+				_, err := userControll.Update(update)
+				if err != nil {
+					fmt.Println("gagal update")
+				} else {
+					fmt.Println("Update berhasil!")
+          time.Sleep(3 * time.Second)
+          clear()
+				}
+			}
+      
+      // DELETE USER
+      case 3:
+			var Delete model.User
+			Delete.ID = session.ID
+			_, err := userControll.Delete(session)
+			if err != nil {
+				fmt.Println("gagal Delete")
+			} else {
+				fmt.Println("Delete Berhasil")
+        time.Sleep(3 * time.Second)
+        clear()
+			}
+      
+      // BUKU SAYA
+      case 4 :
 			var bukuSaya = true
 			var pilih int
 			if session.ID == 0 {
 				bukuSaya = false
-				fmt.Println("+++Silahkan login terlebih dahulu+++")
+				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
+        time.Sleep(3 * time.Second)
+        clear()
 			}
-			clear()
 			for bukuSaya {
 				// Tampilkan Semua Buku Say
 				var sessId = session.ID
@@ -198,7 +243,9 @@ func main() {
 					clear()
 				}
 			}
-		case 4 :
+      
+      // DAFTAR BUKU
+      case 5 :
 			res, err := bukuControll.GetAll()
 			if err != nil {
 				fmt.Print("Gagal ambil data buku", err.Error())
@@ -210,7 +257,42 @@ func main() {
 				fmt.Print(i+1)
 				fmt.Print("\t",res[i].Judul)
 				fmt.Print("\t",res[i].Penulis,"\n")
+			}      
+      
+      // PINJAM BUKU
+      case 6 :
+      
+      // UPDATE USER
+      case 7:
+			var user model.User
+			fmt.Println("Nama : ")
+			fmt.Scanln(&user.Nama)
+			fmt.Println("Username : ")
+			fmt.Scanln(&user.Username)
+			fmt.Println("Password : ")
+			fmt.Scanln(&user.Password)
+			fmt.Println("Email : ")
+			fmt.Scanln(&user.Email)
+			fmt.Println("Alamat : ")
+			fmt.Scanln(&user.Alamat)
+			fmt.Println("Status : ")
+			fmt.Scanln(&user.Status)
+			_, err := userControll.Insert(user)
+			if err != nil {
+				fmt.Println("gagal register")
+			} else {
+				fmt.Println("Update user berhasil")
+        time.Sleep(3 * time.Second)
+        clear()
 			}
+      
+      // LOGOUT 
+      case 8:
+			session = model.User{}
+      fmt.Println("Terima Kasih")
+      time.Sleep(3 * time.Second)
+      Logout()
+      
 		}
 	}
 }
