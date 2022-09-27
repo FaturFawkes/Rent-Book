@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"rentbook/controller"
 	"rentbook/model"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -45,7 +44,14 @@ func Register() (nama, email, password string) {
 	return na, em, pas
 }
 
+func clear(){
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
 func main() {
+	clear()
 	var isRunning bool = true
 	conn, err := conn()
 	if err != nil {
@@ -78,6 +84,7 @@ func main() {
 		fmt.Println("")
 		switch inputMenu {
 		case 1:
+
 			var login model.User
 			fmt.Print("Username : ")
 			fmt.Scanln(&login.Username)
@@ -93,6 +100,7 @@ func main() {
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
+				clear()
 			}
 		case 3 :
 			var bukuSaya = true
@@ -101,40 +109,60 @@ func main() {
 				bukuSaya = false
 				fmt.Println("+++Silahkan login terlebih dahulu+++")
 			}
+			clear()
 			for bukuSaya {
 				fmt.Println("tapilkan semua buku saya")
 				fmt.Println("")
 				fmt.Println("1. Tambah Buku")
 				fmt.Println("2. Edit Buku")
 				fmt.Println("3. Hapus Buku")
-				fmt.Println("Masukkan Pilihan : ")
+				fmt.Println("4. Kembali")
+				fmt.Print("Masukkan Pilihan : ")
 				fmt.Scanln(&pilih)
+				fmt.Println("")
 
 				var buku model.Buku
 				if pilih == 1 {
 					fmt.Print("Judul : ")
 					fmt.Scanln(&buku.Judul)
-					fmt.Println("Penulis : ")
+					fmt.Print("Penulis : ")
+					fmt.Scanln(&buku.Penulis)
+					fmt.Print("Penerbit : ")
+					fmt.Scanln(&buku.Penerbit)
+					fmt.Print("Tahun Terbit : ")
+					fmt.Scan(&buku.Th_terbit)
+					buku.ID_user = session.ID
+					_, err := bukuControll.TambahBuku(buku)
+					if err != nil {
+						fmt.Println("Error insert buku", err.Error())
+					} else {
+						fmt.Println("Buku Berhasil Ditambahkan!")
+						clear()
+					}
+				} else if pilih == 2 {
+					fmt.Print("Kode Buku : ")
+					fmt.Scanln(&buku.ID)
+					fmt.Print("Judul : ")
+					fmt.Scanln(&buku.Judul)
+					fmt.Print("Penulis : ")
 					fmt.Scanln(&buku.Penulis)
 					fmt.Print("Penerbit : ")
 					fmt.Scanln(&buku.Penerbit)
 					fmt.Print("Tahun Terbit : ")
 					fmt.Scanln(&buku.Th_terbit)
-					fmt.Println(buku.Judul)
-					bukuControll.TambahBuku(buku)
-					// res := bukuControll.TambahBuku(buku)
-					// if res < 1 {
-					// 	fmt.Println("Buku gagal ditambahkan")
-					// } else {
-					// 	fmt.Println("Buku berhasil ditambahkan")
-					// 	bukuSaya = false
-					// }
-				} else if pilih == 2 {
-
+					buku.ID_user = session.ID
+					_, err := bukuControll.UpdateBuku(buku)
+					if err != nil {
+						fmt.Println("Error update buku", err.Error())
+					} else {
+						fmt.Println("Buku berhasil diupdate")
+						clear()
+					}
 				} else if pilih == 3 {
 
 				} else {
 					bukuSaya = false
+					clear()
 				}
 			}
 		case 4 :

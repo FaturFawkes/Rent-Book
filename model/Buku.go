@@ -27,6 +27,15 @@ func (bm BukuModel) GetAll() ([]Buku, error) {
 }
 
 func (bm BukuModel) TambahBuku(book Buku) (Buku, error) {
+
+	err := bm.DB.Create(&book).Error
+	if err != nil {
+		return Buku{}, err
+	}
+	return book, nil
+}
+
+func (bm BukuModel) UpdateBuku(book Buku) (Buku, error) {
 	err := bm.DB.Save(&book).Error
 	if err != nil {
 		return Buku{}, err

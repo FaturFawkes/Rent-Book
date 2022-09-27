@@ -21,3 +21,11 @@ func (bc BukuController) TambahBuku(buku model.Buku) (model.Buku, error) {
 	}
 	return res, nil
 }
+
+func (bc BukuController) UpdateBuku(buku model.Buku) (model.Buku, error) {
+	res, err := bc.Model.UpdateBuku(buku) 
+	if err != nil {
+		return model.Buku{}, err
+	}
+	return res, nil
+}
