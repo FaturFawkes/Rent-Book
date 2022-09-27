@@ -50,7 +50,7 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
-	
+
 	migrate(conn)
 	session := model.User{}
 	userModel := model.UserModel{conn}
@@ -82,8 +82,34 @@ func main() {
 			res, err := userControll.Login(login.Username, login.Password)
 			if err != nil {
 				fmt.Println("gagal login")
+			} else {
+				session = res[0]
+				fmt.Println(session.Nama)
 			}
-			session = res[0]
+		case 6:
+			var user model.User
+			fmt.Println("Nama : ")
+			fmt.Scanln(&user.Nama)
+			fmt.Println("Username : ")
+			fmt.Scanln(&user.Username)
+			fmt.Println("Password : ")
+			fmt.Scanln(&user.Password)
+			fmt.Println("Email : ")
+			fmt.Scanln(&user.Email)
+			fmt.Println("Alamat : ")
+			fmt.Scanln(&user.Alamat)
+			fmt.Println("Status : ")
+			fmt.Scanln(&user.Status)
+			_, err := userControll.Insert(user)
+			if err != nil {
+				fmt.Println("gagal register")
+			} else {
+				fmt.Println(session.Nama)
+			}
+		case 7:
+			Logout()
+			session = model.User{}
+
 		}
 	}
 }
