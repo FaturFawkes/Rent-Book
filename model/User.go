@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-
 	"gorm.io/gorm"
 )
 
@@ -14,6 +13,8 @@ type User struct {
 	Email    string `gorm:"type:varchar(50)"`
 	Alamat   string `gorm:"type:varchar(255)"`
 	Status   string
+	Bukus    []Buku `gorm:"foreignKey:ID_user"`
+	Rents    []Rent `gorm:"foreignKey:Id_user"`
 }
 
 type UserModel struct {

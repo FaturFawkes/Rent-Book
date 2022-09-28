@@ -13,9 +13,9 @@ import (
 )
 
 func migrate(db *gorm.DB) {
-	// db.AutoMigrate(&model.Buku{})
-	// db.AutoMigrate(&model.Rent{})
-	// db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Buku{})
+	db.AutoMigrate(&model.Rent{})
 
 }
 
@@ -46,20 +46,21 @@ func Register() (nama, email, password string) {
 	return na, em, pas
 }
 
-func clear() {
+func Clear(){
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
 func main() {
-	clear()
-
+  Clear()
 	var isRunning bool = true
 	conn, err := conn()
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
+
+	migrate(conn)
 
 	// SET MODEL CONTROLLER
 	session := model.User{}
@@ -101,12 +102,12 @@ func main() {
 			if count == 0 {
 				fmt.Println("++++ Username atau password salah ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
 
 		//UPDATE USER
@@ -139,7 +140,7 @@ func main() {
 				} else {
 					fmt.Println("Update berhasil!")
 					time.Sleep(3 * time.Second)
-					clear()
+					Clear()
 				}
 			}
 			// DELETE USER
@@ -150,7 +151,7 @@ func main() {
 				cekDelete = false
 				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
 			if cekDelete == true {
 				Delete.ID = session.ID
@@ -172,7 +173,7 @@ func main() {
 				bukuSaya = false
 				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
 			for bukuSaya {
 				// Tampilkan Semua Buku Say
@@ -221,7 +222,7 @@ func main() {
 					} else {
 						fmt.Println("Buku berhasil ditambahkan!")
 						time.Sleep(3 * time.Second)
-						clear()
+						Clear()
 					}
 				} else if pilih == 2 {
 					fmt.Print("Kode Buku : ")
@@ -241,23 +242,23 @@ func main() {
 					} else {
 						fmt.Println("Buku berhasil diupdate!")
 						time.Sleep(3 * time.Second)
-						clear()
+						Clear()
 					}
 				} else if pilih == 3 {
-					var buku model.Buku
-					fmt.Print("Kode Buku : ")
-					fmt.Scanln(&buku.ID)
-					_, err := bukuControll.DeleteBuku(buku.ID)
-					if err != nil {
-						fmt.Println("Error hapus", err.Error())
-					} else {
-						fmt.Println("Buku berhasil dihapus!")
-						time.Sleep(3 * time.Second)
-						clear()
-					}
-				} else {
-					bukuSaya = false
-					clear()
+          var buku model.Buku
+              fmt.Print("Kode Buku : ")
+              fmt.Scanln(&buku.ID)
+              _, err := bukuControll.DeleteBuku(buku.ID)
+              if err != nil {
+                fmt.Println("Error hapus", err.Error())
+              } else {
+                fmt.Println("Buku berhasil dihapus!")
+                time.Sleep(3 * time.Second)
+                Clear()
+              }
+          } else if pilih == 9 {
+            bukuSaya = false
+            Clear()
 				}
 			}
 
@@ -272,14 +273,14 @@ func main() {
 			fmt.Println("\tPenulis")
 			fmt.Println("Penerbit")
 			for i := 0; i < len(res); i++ {
-				fmt.Print(i + 1)
-				fmt.Print("\t", res[i].Judul)
-				fmt.Print("\t", res[i].Penulis)
-				fmt.Print("\t", res[i].Penerbit)
-			}
-
-			// PINJAM BUKU
-		case 6:
+        fmt.Print(i + 1)
+        fmt.Print("\t", res[i].Judul)
+        fmt.Print("\t", res[i].Penulis)
+        fmt.Print("\t", res[i].Penerbit)
+      }
+      
+      // PINJAM BUKU
+		  case 6:
 			var bukuRent = true
 			if session.ID == 0 {
 				bukuRent = false
@@ -312,16 +313,36 @@ func main() {
 				fmt.Scanln(&pilih)
 				fmt.Println("")
 				if pilih == 1 {
-					// PINJAM BUKU
-				} else if pilih == 2 {
-					// PENGEMBALIAN BUKU
+				var book uint
+				fmt.Print("Kode Buku : ")
+				fmt.Scanln(&book)
+				fmt.Println("")
+				// CEK BUKU SUDAH DIPINJAM ?
+				cek := rentControll.CekRent(book)
+				if cek != true {
+					fmt.Println("Buku sudah dipinjam!")
+					// time.Sleep(2 * time.Second)
+					// Clear()
 				} else {
+					userId := session.ID
+					_, err := rentControll.AddRent(book, userId)
+					if err != nil {
+						fmt.Println("Gagal input rent")
+					}
+					fmt.Println("Buku berhasil dipinjam!")
 					bukuRent = false
-					clear()
+					// time.Sleep(2 * time.Second)
+					// Clear()
 				}
+			} else if pilih == 2 {
+				// PENGEMBALIAN BUKU
+			} else {
+				bukuRent = false
+					Clear()
 			}
-		// UPDATE USER
-		case 7:
+      
+      // UPDATE USER
+		  case 7:
 			var user model.User
 			fmt.Print("Nama : ")
 			fmt.Scanln(&user.Nama)
@@ -339,6 +360,7 @@ func main() {
 			if err != nil {
 				fmt.Println("gagal register")
 			} else {
+
 				fmt.Println("Update user berhasil")
 				time.Sleep(3 * time.Second)
 				clear()
