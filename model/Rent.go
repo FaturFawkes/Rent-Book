@@ -2,6 +2,7 @@ package model
 
 import (
 	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -36,10 +37,18 @@ func (rm RentModel) AddRent(bookId, userId uint) (Result, error){
 	return Result{}, nil
 }
 
-func (rm RentModel) CekRent(bookId uint) bool{
-	cek := rm.DB.Where("id_buku = ?", bookId).Find(&Rent{}).RowsAffected
+func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error){
+	var rent []Rent
+	var buku []Buku
+	
+	cek := rm.DB.Where("id_buku = ?", bookId).Find(&rent).RowsAffected
 	if cek > 0 {
-		return true
+		return rent, nil, nil
+	} else {
+		bookCek := rm.DB.Find(&buku, bookId).Error
+		if bookCek != nil {
+			return nil, nil, bookCek
+		}
+		return nil, buku, nil
 	}
-	return false
 }

@@ -46,14 +46,14 @@ func Register() (nama, email, password string) {
 	return na, em, pas
 }
 
-func clear(){
+func Clear(){
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
 func main() {
-	clear()
+	Clear()
 	var isRunning bool = true
 	conn, err := conn()
 	if err != nil {
@@ -102,12 +102,12 @@ func main() {
 			if count == 0 {
 				fmt.Println("++++ Username atau password salah ++++", err.Error())
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
       
       //UPDATE USER
@@ -137,7 +137,7 @@ func main() {
 				} else {
 					fmt.Println("Update berhasil!")
 					time.Sleep(3 * time.Second)
-					clear()
+					Clear()
 				}
 			}
       
@@ -151,7 +151,7 @@ func main() {
 			} else {
 				fmt.Println("Delete Berhasil")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
       
       // BUKU SAYA
@@ -162,7 +162,7 @@ func main() {
 				bukuSaya = false
 				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
 				time.Sleep(3 * time.Second)
-				clear()
+				Clear()
 			}
 			for bukuSaya {
 				// Tampilkan Semua Buku Say
@@ -211,7 +211,7 @@ func main() {
 					} else {
 						fmt.Println("Buku berhasil ditambahkan!")
 						time.Sleep(3 * time.Second)
-						clear()
+						Clear()
 					}
 				} else if pilih == 2 {
 					fmt.Print("Kode Buku : ")
@@ -231,7 +231,7 @@ func main() {
 					} else {
 						fmt.Println("Buku berhasil diupdate!")
 						time.Sleep(3 * time.Second)
-						clear()
+						Clear()
 					}
 				} else if pilih == 3 {
 						var buku model.Buku
@@ -243,11 +243,11 @@ func main() {
 						} else {
 							fmt.Println("Buku berhasil dihapus!")
 							time.Sleep(3 * time.Second)
-							clear()
+							Clear()
 						}
 				} else if pilih == 9 {
 					bukuSaya = false
-					clear()
+					Clear()
 				}
 			}
       
@@ -273,7 +273,7 @@ func main() {
 			bukuRent = false
 			fmt.Println("++++ Silahkan login terlebih dahulu ++++")
 			time.Sleep(3 * time.Second)
-			clear()
+			Clear()
 		}
 		for bukuRent {
 			var pilih int
@@ -306,22 +306,26 @@ func main() {
 				fmt.Println("")
 				// CEK BUKU SUDAH DIPINJAM ?
 				cek := rentControll.CekRent(book)
-				if cek == true {
-					fmt.Println("Buku sudah dipinjam")
+				if cek != true {
+					fmt.Println("Buku sudah dipinjam!")
+					// time.Sleep(2 * time.Second)
+					// Clear()
 				} else {
 					userId := session.ID
-					res, err := rentControll.AddRent(book, userId)
+					_, err := rentControll.AddRent(book, userId)
 					if err != nil {
 						fmt.Println("Gagal input rent")
 					}
-					fmt.Println(res)
+					fmt.Println("Buku berhasil dipinjam!")
+					bukuRent = false
+					// time.Sleep(2 * time.Second)
+					// Clear()
 				}
-
 			} else if pilih == 2 {
 				// PENGEMBALIAN BUKU
 			} else {
 				bukuRent = false
-					clear()
+					Clear()
 			}
 		}
       // UPDATE USER
@@ -345,7 +349,7 @@ func main() {
 			} else {
 				fmt.Println("Register user berhasil")
         time.Sleep(3 * time.Second)
-        clear()
+        Clear()
 			}
       
       // LOGOUT 

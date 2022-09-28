@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"rentbook/model"
 )
 
@@ -20,11 +21,19 @@ func (rc RentController) AddRent(bookId, userId uint) (model.Result, error) {
 	return res, nil
 }
 
-func (rc RentController) CekRent(bookId uint) bool {
-	res := rc.Model.CekRent(bookId)
-	return res
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return res, nil
+func (rc RentController) CekRent(bookId uint) bool{
+	rent, id, err := rc.Model.CekRent(bookId)
+	if err != nil {
+		fmt.Println("error rent ln 27")
+	}
+
+	if rent != nil {
+		if rent[0].Tgl_pinjam == rent[0].Tgl_kembali {
+			return false
+		}
+	} else if id != nil {
+		return true
+	}
+
+	return true
 }
