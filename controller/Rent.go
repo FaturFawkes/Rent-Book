@@ -9,9 +9,13 @@ type RentController struct {
 }
 
 func (rc RentController) GetAll() ([]model.Rent, error) {
-
+	res, err := rc.Model.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
-func (rc RentController) AddRent() (model.Rent, error) {
-	
-}
+// func (rc RentController) AddRent() (model.Rent, error) {
+
+// }
