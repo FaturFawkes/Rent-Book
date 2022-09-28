@@ -46,7 +46,7 @@ func Register() (nama, email, password string) {
 	return na, em, pas
 }
 
-func clear(){
+func clear() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
@@ -72,8 +72,8 @@ func main() {
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(login)")
-    fmt.Println("3.Hapus Profile(login)")
-    fmt.Println("4.Buku Saya")
+		fmt.Println("3.Hapus Profile(login)")
+		fmt.Println("4.Buku Saya")
 		fmt.Println("5.Daftar Buku")
 		fmt.Println("6.Pinjam Buku (login)")
 		fmt.Println("7.Register")
@@ -83,8 +83,8 @@ func main() {
 		fmt.Scanln(&inputMenu)
 		fmt.Println("")
 		switch inputMenu {
-    
-    //LOGIN
+
+		//LOGIN
 		case 1:
 			var login model.User
 			fmt.Print("Username : ")
@@ -94,17 +94,18 @@ func main() {
 			res, err := userControll.Login(login.Username, login.Password)
 			count := len(res)
 			if count == 0 {
-				fmt.Println("++++ Username atau password salah ++++", err.Error)
-        time.Sleep(3 * time.Second)
-        clear()
+				fmt.Println("++++ Username atau password salah ++++", err.Error())
+				time.Sleep(3 * time.Second)
+				clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
+				time.Sleep(3 * time.Second)
 				clear()
 			}
-      
-      //UPDATE USER
-      case 2:
+
+		//UPDATE USER
+		case 2:
 			var update model.User
 			var cekLogin = true
 			if session.ID == 0 {
@@ -129,13 +130,13 @@ func main() {
 					fmt.Println("gagal update")
 				} else {
 					fmt.Println("Update berhasil!")
-          time.Sleep(3 * time.Second)
-          clear()
+					time.Sleep(3 * time.Second)
+					clear()
 				}
 			}
-      
-      // DELETE USER
-      case 3:
+
+		// DELETE USER
+		case 3:
 			var Delete model.User
 			Delete.ID = session.ID
 			_, err := userControll.Delete(session)
@@ -143,19 +144,19 @@ func main() {
 				fmt.Println("gagal Delete")
 			} else {
 				fmt.Println("Delete Berhasil")
-        time.Sleep(3 * time.Second)
-        clear()
+				time.Sleep(3 * time.Second)
+				clear()
 			}
-      
-      // BUKU SAYA
-      case 4 :
+
+		// BUKU SAYA
+		case 4:
 			var bukuSaya = true
 			var pilih int
 			if session.ID == 0 {
 				bukuSaya = false
 				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
-        time.Sleep(3 * time.Second)
-        clear()
+				time.Sleep(3 * time.Second)
+				clear()
 			}
 			for bukuSaya {
 				// Tampilkan Semua Buku Say
@@ -170,12 +171,12 @@ func main() {
 				fmt.Print("\tTahun Terbit\n")
 
 				for i := 0; i < len(res); i++ {
-					fmt.Print(i+1)
-					fmt.Print("\t",res[i].ID)
-					fmt.Print("\t",res[i].Judul)
-					fmt.Print("\t",res[i].Penulis)
-					fmt.Print("\t",res[i].Penerbit)
-					fmt.Print("\t",res[i].Th_terbit,"\n")
+					fmt.Print(i + 1)
+					fmt.Print("\t", res[i].ID)
+					fmt.Print("\t", res[i].Judul)
+					fmt.Print("\t", res[i].Penulis)
+					fmt.Print("\t", res[i].Penerbit)
+					fmt.Print("\t", res[i].Th_terbit, "\n")
 				}
 				fmt.Println("")
 				fmt.Println("====== Sub Menu ======")
@@ -227,25 +228,25 @@ func main() {
 						clear()
 					}
 				} else if pilih == 3 {
-						var buku model.Buku
-						fmt.Print("Kode Buku : ")
-						fmt.Scanln(&buku.ID)
-						_, err := bukuControll.DeleteBuku(buku.ID)
-						if err != nil {
-							fmt.Println("Error hapus", err.Error())
-						} else {
-							fmt.Println("Buku berhasil dihapus!")
-							time.Sleep(3 * time.Second)
-							clear()
-						}
+					var buku model.Buku
+					fmt.Print("Kode Buku : ")
+					fmt.Scanln(&buku.ID)
+					_, err := bukuControll.DeleteBuku(buku.ID)
+					if err != nil {
+						fmt.Println("Error hapus", err.Error())
+					} else {
+						fmt.Println("Buku berhasil dihapus!")
+						time.Sleep(3 * time.Second)
+						clear()
+					}
 				} else {
 					bukuSaya = false
 					clear()
 				}
 			}
-      
-      // DAFTAR BUKU
-      case 5 :
+
+		// DAFTAR BUKU
+		case 5:
 			res, err := bukuControll.GetAll()
 			if err != nil {
 				fmt.Print("Gagal ambil data buku", err.Error())
@@ -254,16 +255,16 @@ func main() {
 			fmt.Print("\tJudul")
 			fmt.Println("\t\t\tPenulis")
 			for i := 0; i < len(res); i++ {
-				fmt.Print(i+1)
-				fmt.Print("\t",res[i].Judul)
-				fmt.Print("\t",res[i].Penulis,"\n")
-			}      
-      
-      // PINJAM BUKU
-      case 6 :
-      
-      // UPDATE USER
-      case 7:
+				fmt.Print(i + 1)
+				fmt.Print("\t", res[i].Judul)
+				fmt.Print("\t", res[i].Penulis, "\n")
+			}
+
+		// PINJAM BUKU
+		case 6:
+
+		// UPDATE USER
+		case 7:
 			var user model.User
 			fmt.Println("Nama : ")
 			fmt.Scanln(&user.Nama)
@@ -282,17 +283,17 @@ func main() {
 				fmt.Println("gagal register")
 			} else {
 				fmt.Println("Update user berhasil")
-        time.Sleep(3 * time.Second)
-        clear()
+				time.Sleep(3 * time.Second)
+				clear()
 			}
-      
-      // LOGOUT 
-      case 8:
+
+		// LOGOUT
+		case 8:
 			session = model.User{}
-      fmt.Println("Terima Kasih")
-      time.Sleep(3 * time.Second)
-      Logout()
-      
+			fmt.Println("Terima Kasih")
+			time.Sleep(3 * time.Second)
+			Logout()
+
 		}
 	}
 }
