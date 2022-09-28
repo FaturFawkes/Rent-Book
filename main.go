@@ -59,11 +59,15 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
+
+	// SET MODEL CONTROLLER
 	session := model.User{}
 	userModel := model.UserModel{conn}
 	userControll := controller.UserController{userModel}
 	bukuModel := model.BukuModel{conn}
 	bukuControll := controller.BukuController{bukuModel}
+	rentModel := model.RentModel{conn}
+	rentControll := controller.RentController{rentModel}
 
 	for isRunning {
 		var inputMenu int
@@ -255,6 +259,7 @@ func main() {
 			fmt.Print("\tJudul")
 			fmt.Println("\t\t\tPenulis")
 			for i := 0; i < len(res); i++ {
+<<<<<<< HEAD
 				fmt.Print(i + 1)
 				fmt.Print("\t", res[i].Judul)
 				fmt.Print("\t", res[i].Penulis, "\n")
@@ -265,6 +270,57 @@ func main() {
 
 		// UPDATE USER
 		case 7:
+=======
+				fmt.Print(i+1)
+				fmt.Print("\t",res[i].Judul)
+				fmt.Print("\t",res[i].Penulis,"\n")
+			}      
+      
+      // PINJAM BUKU
+      case 6 :
+		var bukuRent = true
+		if session.ID == 0 {
+			bukuRent = false
+			fmt.Println("++++ Silahkan login terlebih dahulu ++++")
+			time.Sleep(3 * time.Second)
+			clear()
+		}
+		for bukuRent {
+			var pilih int
+			var sessId = session.ID
+			res, _ := rentControll.GetAll()
+			fmt.Println("\t===== DAFTAR BUKU BELUM DIPINJAM =====")
+			fmt.Print("No")
+			fmt.Print("\tKode")
+			fmt.Print("\tJudul")
+			fmt.Print("\tPemilik")
+
+			for i := 0; i < len(res); i++ {
+				fmt.Print(i+1)
+				fmt.Print("\t",res[i].ID)
+				fmt.Print("\t",res[i].Judul)
+				fmt.Print("\t",res[i].Pemilik)
+			}	
+			fmt.Println("")
+			fmt.Println("====== Sub Menu ======")
+			fmt.Println("1. Pinjam Buku")
+			fmt.Println("2. Pengembalian Buku")
+			fmt.Println("9. Kembali")
+			fmt.Print("Masukkan Pilihan : ")
+			fmt.Scanln(&pilih)
+			fmt.Println("")
+			if pilih == 1 {
+				// PINJAM BUKU
+			} else if pilih == 2 {
+				// PENGEMBALIAN BUKU
+			} else {
+				bukuRent = false
+					clear()
+			}
+		}
+      // UPDATE USER
+      case 7:
+>>>>>>> 346f7bb96238a7f3ec2d333b94e8358f1bf384a6
 			var user model.User
 			fmt.Println("Nama : ")
 			fmt.Scanln(&user.Nama)
@@ -293,7 +349,11 @@ func main() {
 			fmt.Println("Terima Kasih")
 			time.Sleep(3 * time.Second)
 			Logout()
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 346f7bb96238a7f3ec2d333b94e8358f1bf384a6
 		}
 	}
 }
