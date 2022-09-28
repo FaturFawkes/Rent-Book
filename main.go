@@ -301,17 +301,22 @@ func main() {
 			fmt.Println("")
 			if pilih == 1 {
 				var book uint
-				// rentBook.Id_user = sessId
 				fmt.Print("Kode Buku : ")
 				fmt.Scanln(&book)
-				var rent model.Rent
-				rent.Id_user = session.ID
-				userId := rent.Id_user
-				res, err := rentControll.AddRent(book, userId)
-				if err != nil {
-					fmt.Println("Gagal input rent")
+				fmt.Println("")
+				// CEK BUKU SUDAH DIPINJAM ?
+				cek := rentControll.CekRent(book)
+				if cek == true {
+					fmt.Println("Buku sudah dipinjam")
+				} else {
+					userId := session.ID
+					res, err := rentControll.AddRent(book, userId)
+					if err != nil {
+						fmt.Println("Gagal input rent")
+					}
+					fmt.Println(res)
 				}
-				fmt.Println(res)
+
 			} else if pilih == 2 {
 				// PENGEMBALIAN BUKU
 			} else {

@@ -19,3 +19,12 @@ func (rc RentController) AddRent(bookId, userId uint) (model.Result, error) {
 	}
 	return res, nil
 }
+
+func (rc RentController) CekRent(bookId uint) bool {
+	res := rc.Model.CekRent(bookId)
+	return res
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return res, nil
+}
