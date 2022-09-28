@@ -8,24 +8,24 @@ import (
 
 type Rent struct {
 	gorm.Model
-	Id_user     uint `gorm:"type:int(11)"`
+  	Id_user     uint `gorm:"type:int(11)"`
 	Id_buku     uint `gorm:"type:int(11)"` 
 	Tgl_pinjam  time.Time `gorm:"autoCreateTime"`
 	Tgl_kembali time.Time `gorm:"autoUpdateTime"`
-}
-
-type Result struct {
-	nama_pemilik string
-	judul_buku string
 }
 
 type RentModel struct {
 	DB *gorm.DB
 }
 
-// func (rm RentModel) GetAll() ([]Rent, error) {
-
-// }
+func (rm RentModel) GetAll() ([]Rent, error) {
+	var res []Rent
+	err := rm.DB.Session(&gorm.Session{QueryFields: true}).Model(&Rent{}).Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
 
 func (rm RentModel) AddRent(bookId, userId uint) (Result, error){
 
