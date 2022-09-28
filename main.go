@@ -59,11 +59,15 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
+
+	// SET MODEL CONTROLLER
 	session := model.User{}
 	userModel := model.UserModel{conn}
 	userControll := controller.UserController{userModel}
 	bukuModel := model.BukuModel{conn}
 	bukuControll := controller.BukuController{bukuModel}
+	rentModel := model.RentModel{conn}
+	rentControll := controller.RentController{rentModel}
 
 	for isRunning {
 		var inputMenu int
@@ -72,8 +76,8 @@ func main() {
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(login)")
-    fmt.Println("3.Hapus Profile(login)")
-    fmt.Println("4.Buku Saya")
+		fmt.Println("3.Hapus Profile(login)")
+		fmt.Println("4.Buku Saya")
 		fmt.Println("5.Daftar Buku")
 		fmt.Println("6.Pinjam Buku (login)")
 		fmt.Println("7.Register")
@@ -94,12 +98,13 @@ func main() {
 			res, err := userControll.Login(login.Username, login.Password)
 			count := len(res)
 			if count == 0 {
-				fmt.Println("++++ Username atau password salah ++++", err.Error)
-        time.Sleep(3 * time.Second)
-        clear()
+				fmt.Println("++++ Username atau password salah ++++", err.Error())
+				time.Sleep(3 * time.Second)
+				clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
+				time.Sleep(3 * time.Second)
 				clear()
 			}
       
@@ -129,8 +134,8 @@ func main() {
 					fmt.Println("gagal update")
 				} else {
 					fmt.Println("Update berhasil!")
-          time.Sleep(3 * time.Second)
-          clear()
+					time.Sleep(3 * time.Second)
+					clear()
 				}
 			}
       
@@ -143,8 +148,8 @@ func main() {
 				fmt.Println("gagal Delete")
 			} else {
 				fmt.Println("Delete Berhasil")
-        time.Sleep(3 * time.Second)
-        clear()
+				time.Sleep(3 * time.Second)
+				clear()
 			}
       
       // BUKU SAYA
@@ -154,8 +159,8 @@ func main() {
 			if session.ID == 0 {
 				bukuSaya = false
 				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
-        time.Sleep(3 * time.Second)
-        clear()
+				time.Sleep(3 * time.Second)
+				clear()
 			}
 			for bukuSaya {
 				// Tampilkan Semua Buku Say
@@ -261,7 +266,46 @@ func main() {
       
       // PINJAM BUKU
       case 6 :
-      
+		var bukuRent = true
+		if session.ID == 0 {
+			bukuRent = false
+			fmt.Println("++++ Silahkan login terlebih dahulu ++++")
+			time.Sleep(3 * time.Second)
+			clear()
+		}
+		for bukuRent {
+			var pilih int
+			var sessId = session.ID
+			res, _ := rentControll.GetAll()
+			fmt.Println("\t===== DAFTAR BUKU BELUM DIPINJAM =====")
+			fmt.Print("No")
+			fmt.Print("\tKode")
+			fmt.Print("\tJudul")
+			fmt.Print("\tPemilik")
+
+			for i := 0; i < len(res); i++ {
+				fmt.Print(i+1)
+				fmt.Print("\t",res[i].ID)
+				fmt.Print("\t",res[i].Judul)
+				fmt.Print("\t",res[i].Pemilik)
+			}	
+			fmt.Println("")
+			fmt.Println("====== Sub Menu ======")
+			fmt.Println("1. Pinjam Buku")
+			fmt.Println("2. Pengembalian Buku")
+			fmt.Println("9. Kembali")
+			fmt.Print("Masukkan Pilihan : ")
+			fmt.Scanln(&pilih)
+			fmt.Println("")
+			if pilih == 1 {
+				// PINJAM BUKU
+			} else if pilih == 2 {
+				// PENGEMBALIAN BUKU
+			} else {
+				bukuRent = false
+					clear()
+			}
+		}
       // UPDATE USER
       case 7:
 			var user model.User
@@ -289,9 +333,9 @@ func main() {
       // LOGOUT 
       case 8:
 			session = model.User{}
-      fmt.Println("Terima Kasih")
-      time.Sleep(3 * time.Second)
-      Logout()
+			fmt.Println("Terima Kasih")
+			time.Sleep(3 * time.Second)
+			Logout()
       
 		}
 	}
