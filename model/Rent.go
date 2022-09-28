@@ -27,14 +27,14 @@ func (rm RentModel) GetAll() ([]Rent, error) {
 	return res, nil
 }
 
-func (rm RentModel) AddRent(bookId, userId uint) (Result, error){
+func (rm RentModel) AddRent(bookId, userId uint) (Rent, error){
 
 	// err := rm.DB.Model(&Rent{}).Select("users.nama, bukus.judul").Joins("left join users on user.id = ?", userId).Joins("left join bukus on bukus.id = ?", bookId).Scan(&Rent{}).Error
 	err := rm.DB.Create(&Rent{Id_user: userId, Id_buku: bookId}).Error
 	if err != nil {
-		return Result{}, err
+		return Rent{}, err
 	}
-	return Result{}, nil
+	return Rent{}, nil
 }
 
 func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error){
