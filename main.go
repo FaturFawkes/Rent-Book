@@ -13,9 +13,9 @@ import (
 )
 
 func migrate(db *gorm.DB) {
-	// db.AutoMigrate(&model.Buku{})
-	// db.AutoMigrate(&model.Rent{})
-	// db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Buku{})
+	db.AutoMigrate(&model.Rent{})
 
 }
 
@@ -59,6 +59,8 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	}
+
+	migrate(conn)
 
 	// SET MODEL CONTROLLER
 	session := model.User{}
@@ -243,7 +245,7 @@ func main() {
 							time.Sleep(3 * time.Second)
 							clear()
 						}
-				} else {
+				} else if pilih == 9 {
 					bukuSaya = false
 					clear()
 				}
@@ -275,20 +277,20 @@ func main() {
 		}
 		for bukuRent {
 			var pilih int
-			var sessId = session.ID
-			res, _ := rentControll.GetAll()
-			fmt.Println("\t===== DAFTAR BUKU BELUM DIPINJAM =====")
-			fmt.Print("No")
-			fmt.Print("\tKode")
-			fmt.Print("\tJudul")
-			fmt.Print("\tPemilik")
+			// var sessId = session.ID
+			// res, _ := rentControll.GetAll()
+			// fmt.Println("\t===== DAFTAR BUKU BELUM DIPINJAM =====")
+			// fmt.Print("No")
+			// fmt.Print("\tKode")
+			// fmt.Print("\tJudul")
+			// fmt.Print("\tPemilik")
 
-			for i := 0; i < len(res); i++ {
-				fmt.Print(i+1)
-				fmt.Print("\t",res[i].ID)
-				fmt.Print("\t",res[i].Judul)
-				fmt.Print("\t",res[i].Pemilik)
-			}	
+			// for i := 0; i < len(res); i++ {
+			// 	fmt.Print(i+1)
+			// 	fmt.Print("\t",res[i].ID)
+			// 	fmt.Print("\t",res[i].Judul)
+			// 	fmt.Print("\t",res[i].Pemilik)
+			// }	
 			fmt.Println("")
 			fmt.Println("====== Sub Menu ======")
 			fmt.Println("1. Pinjam Buku")
@@ -298,7 +300,18 @@ func main() {
 			fmt.Scanln(&pilih)
 			fmt.Println("")
 			if pilih == 1 {
-				// PINJAM BUKU
+				var book uint
+				// rentBook.Id_user = sessId
+				fmt.Print("Kode Buku : ")
+				fmt.Scanln(&book)
+				var rent model.Rent
+				rent.Id_user = session.ID
+				userId := rent.Id_user
+				res, err := rentControll.AddRent(book, userId)
+				if err != nil {
+					fmt.Println("Gagal input rent")
+				}
+				fmt.Println(res)
 			} else if pilih == 2 {
 				// PENGEMBALIAN BUKU
 			} else {
@@ -325,7 +338,7 @@ func main() {
 			if err != nil {
 				fmt.Println("gagal register")
 			} else {
-				fmt.Println("Update user berhasil")
+				fmt.Println("Register user berhasil")
         time.Sleep(3 * time.Second)
         clear()
 			}

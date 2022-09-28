@@ -8,10 +8,14 @@ type RentController struct {
 	Model model.RentModel
 }
 
-func (rc RentController) GetAll() ([]model.Rent, error) {
+// func (rc RentController) GetAll() ([]model.Rent, error) {
 
-}
+// }
 
-func (rc RentController) AddRent() (model.Rent, error) {
-	
+func (rc RentController) AddRent(bookId, userId uint) (model.Result, error) {
+	res, err := rc.Model.AddRent(bookId, userId )
+	if err != nil {
+		return model.Result{}, err
+	}
+	return res, nil
 }
