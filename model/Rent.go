@@ -20,7 +20,6 @@ type RentModel struct {
 	DB *gorm.DB
 }
 
-// db.Session(&gorm.Session{QueryFields: true}).Find(&user)
 func (rm RentModel) GetAll() ([]Rent, error) {
 	var res []Rent
 	err := rm.DB.Session(&gorm.Session{QueryFields: true}).Model(&Rent{}).Find(&res).Error
@@ -29,8 +28,3 @@ func (rm RentModel) GetAll() ([]Rent, error) {
 	}
 	return res, nil
 }
-
-// Select("id_user", "id_buku", "pemilik", "judul").Model(&Rent{}).Find(&res).Error
-// func (rm RentModel) AddRent() (Rent, error) {
-
-// }

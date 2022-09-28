@@ -96,10 +96,10 @@ func main() {
 			fmt.Scanln(&login.Username)
 			fmt.Print("Password :")
 			fmt.Scanln(&login.Password)
-			res, err := userControll.Login(login.Username, login.Password)
+			res, _ := userControll.Login(login.Username, login.Password)
 			count := len(res)
 			if count == 0 {
-				fmt.Println("++++ Username atau password salah ++++", err.Error())
+				fmt.Println("++++ Username atau password salah ++++")
 				time.Sleep(3 * time.Second)
 				clear()
 			} else {
@@ -115,19 +115,22 @@ func main() {
 			var cekLogin = true
 			if session.ID == 0 {
 				cekLogin = false
+				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
+				time.Sleep(3 * time.Second)
+				clear()
 			}
 			if cekLogin == true {
-				fmt.Println("Nama : ")
+				fmt.Print("Nama : ")
 				fmt.Scanln(&update.Nama)
-				fmt.Println("Username : ")
+				fmt.Print("Username : ")
 				fmt.Scanln(&update.Username)
-				fmt.Println("Password : ")
+				fmt.Print("Password : ")
 				fmt.Scanln(&update.Password)
-				fmt.Println("Email : ")
+				fmt.Print("Email : ")
 				fmt.Scanln(&update.Email)
-				fmt.Println("Alamat : ")
+				fmt.Print("Alamat : ")
 				fmt.Scanln(&update.Alamat)
-				fmt.Println("Status : ")
+				fmt.Print("Status : ")
 				fmt.Scanln(&update.Status)
 				update.ID = session.ID
 				_, err := userControll.Update(update)
@@ -139,18 +142,26 @@ func main() {
 					clear()
 				}
 			}
-
-		// DELETE USER
+			// DELETE USER
 		case 3:
 			var Delete model.User
-			Delete.ID = session.ID
-			_, err := userControll.Delete(session)
-			if err != nil {
-				fmt.Println("gagal Delete")
-			} else {
-				fmt.Println("Delete Berhasil")
+			var cekDelete = true
+			if session.ID == 0 {
+				cekDelete = false
+				fmt.Println("++++ Silahkan login terlebih dahulu ++++")
 				time.Sleep(3 * time.Second)
 				clear()
+			}
+			if cekDelete == true {
+				Delete.ID = session.ID
+				_, err := userControll.Delete(session)
+				if err != nil {
+					fmt.Println("gagal Delete")
+				} else {
+					fmt.Println("Delete Berhasil")
+					time.Sleep(3 * time.Second)
+					clear()
+				}
 			}
 
 		// BUKU SAYA
@@ -258,7 +269,7 @@ func main() {
 			}
 			fmt.Print("No")
 			fmt.Print("\tJudul")
-			fmt.Println("\t\t\tPenulis")
+			fmt.Println("\t\tPenulis")
 			for i := 0; i < len(res); i++ {
 				fmt.Print(i + 1)
 				fmt.Print("\t", res[i].Judul)
@@ -310,17 +321,17 @@ func main() {
 		// UPDATE USER
 		case 7:
 			var user model.User
-			fmt.Println("Nama : ")
+			fmt.Print("Nama : ")
 			fmt.Scanln(&user.Nama)
-			fmt.Println("Username : ")
+			fmt.Print("Username : ")
 			fmt.Scanln(&user.Username)
-			fmt.Println("Password : ")
+			fmt.Print("Password : ")
 			fmt.Scanln(&user.Password)
-			fmt.Println("Email : ")
+			fmt.Print("Email : ")
 			fmt.Scanln(&user.Email)
-			fmt.Println("Alamat : ")
+			fmt.Print("Alamat : ")
 			fmt.Scanln(&user.Alamat)
-			fmt.Println("Status : ")
+			fmt.Print("Status : ")
 			fmt.Scanln(&user.Status)
 			_, err := userControll.Insert(user)
 			if err != nil {
