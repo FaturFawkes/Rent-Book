@@ -12,19 +12,40 @@ type Rent struct {
 	Id_buku     uint      `gorm:"type:int(11)"`
 	Tgl_pinjam  time.Time `gorm:"autoCreateTime"`
 	Tgl_kembali time.Time `gorm:"autoUpdateTime"`
+	Status string `gorm:"type:varchar(20)"`
+}
+
+type DetailRent struct {
+	Id uint
+	Judul string
+	Nama string
 }
 
 type RentModel struct {
 	DB *gorm.DB
 }
 
-func (rm RentModel) GetAll() ([]Rent, error) {
-	var res []Rent
-	err := rm.DB.Session(&gorm.Session{QueryFields: true}).Model(&Rent{}).Find(&res).Error
-	if err != nil {
-		return nil, err
+func (rm RentModel) GetAll() ([]DetailRent, error) {
+	var res []DetailRent
+
+	// err1 := rm.DB.Select("bukus.id, bukus.judul, users.nama").Table("bukus").
+	// 	Joins("left join users on bukus.id_user = users.id").
+	// 	Joins("Left join rents on rents.id_buku = bukus.id").
+	// 	Where("rents.status = ?", "kembali").Scan(&res).Error
+		
+	err2 := rm.DB.Select("bukus.id, bukus.judul, users.nama").Table("bukus").
+			Joins("left join rents on bukus.id != rents.id_bukus"). 
+			Error
+	// if err1 != nil {
+	// 	return nil, err1
+	// }
+	if err2 != nil {
+		return nil, err2
 	}
-	return res, nil
+
+
+	return res, err2
+
 }
 
 func (rm RentModel) AddRent(bookId, userId uint) (Rent, error) {
@@ -52,6 +73,27 @@ func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error) {
 		return nil, buku, nil
 	}
 }
+func (rm RentModel) KembaliBuku(idBuku, idUser uint) (bool, error){
+	var res Rent
+	err := rm.DB.Model(res).Where("id_buku = ?", idBuku).Where("id_user = ?", idUser).Updates(Rent{Status: "kembali", Tgl_kembali: time.Now()}).Error
+	err1 := rm.DB.Where("id_buku = ?", idBuku).Where("id_user = ?", idUser).Delete(&res).Error
+	if err != nil {
+		return false, err
+	}
+	if err1 != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// func (rm RentModel) AllBookRent() ([]Buku, error) {
+// 	var res []Buku
+// 	err := rm.DB.
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return res, nil
+// }
 
 func (rm RentModel) UpdateTgl(id uint) (int, error) {
 	var time = time.Now()
