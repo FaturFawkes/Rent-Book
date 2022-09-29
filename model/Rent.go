@@ -8,8 +8,8 @@ import (
 
 type Rent struct {
 	gorm.Model
-  	Id_user     uint `gorm:"type:int(11)"`
-	Id_buku     uint `gorm:"type:int(11)"` 
+	Id_user     uint      `gorm:"type:int(11)"`
+	Id_buku     uint      `gorm:"type:int(11)"`
 	Tgl_pinjam  time.Time `gorm:"autoCreateTime"`
 	Tgl_kembali time.Time `gorm:"autoUpdateTime"`
 }
@@ -27,7 +27,7 @@ func (rm RentModel) GetAll() ([]Rent, error) {
 	return res, nil
 }
 
-func (rm RentModel) AddRent(bookId, userId uint) (Rent, error){
+func (rm RentModel) AddRent(bookId, userId uint) (Rent, error) {
 
 	// err := rm.DB.Model(&Rent{}).Select("users.nama, bukus.judul").Joins("left join users on user.id = ?", userId).Joins("left join bukus on bukus.id = ?", bookId).Scan(&Rent{}).Error
 	err := rm.DB.Create(&Rent{Id_user: userId, Id_buku: bookId}).Error
@@ -37,10 +37,10 @@ func (rm RentModel) AddRent(bookId, userId uint) (Rent, error){
 	return Rent{}, nil
 }
 
-func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error){
+func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error) {
 	var rent []Rent
 	var buku []Buku
-	
+
 	cek := rm.DB.Where("id_buku = ?", bookId).Find(&rent).RowsAffected
 	if cek > 0 {
 		return rent, nil, nil
@@ -51,4 +51,13 @@ func (rm RentModel) CekRent(bookId uint) ([]Rent, []Buku, error){
 		}
 		return nil, buku, nil
 	}
+}
+
+func (rm RentModel) UpdateTgl(id uint) (int, error) {
+	var time = time.Now()
+	err := rm.DB.Model(&Rent{}).Where("id_buku = ?", id).Update("tgl_kembali", time).RowsAffected
+	if err > 0 {
+		return 1, nil
+	}
+	return 0, nil
 }
