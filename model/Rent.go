@@ -33,9 +33,10 @@ func (rm RentModel) GetAll() ([]DetailRent, error) {
 	// 	Joins("Left join rents on rents.id_buku = bukus.id").
 	// 	Where("rents.status = ?", "kembali").Scan(&res).Error
 		
-	err2 := rm.DB.Select("bukus.id, bukus.judul, users.nama").Table("bukus").
-			Joins("left join rents on bukus.id != rents.id_bukus"). 
-			Error
+	err2 := rm.DB.Distinct("bukus.id, bukus.judul, users.nama").Select("bukus.id, bukus.judul, users.nama").
+			Table("bukus").Joins("left join rents on rents.id_buku = bukus.id") .
+			Joins("left join users on users.id = bukus.id_user").Where("rents.status", "").
+			Scan(&res).Error
 	// if err1 != nil {
 	// 	return nil, err1
 	// }
@@ -95,11 +96,11 @@ func (rm RentModel) KembaliBuku(idBuku, idUser uint) (bool, error){
 // 	return res, nil
 // }
 
-func (rm RentModel) UpdateTgl(id uint) (int, error) {
-	var time = time.Now()
-	err := rm.DB.Model(&Rent{}).Where("id_buku = ?", id).Update("tgl_kembali", time).RowsAffected
-	if err > 0 {
-		return 1, nil
-	}
-	return 0, nil
-}
+// func (rm RentModel) UpdateTgl(id uint) (int, error) {
+// 	var time = time.Now()
+// 	err := rm.DB.Model(&Rent{}).Where("id_buku = ?", id).Update("tgl_kembali", time).RowsAffected
+// 	if err > 0 {
+// 		return 1, nil
+// 	}
+// 	return 0, nil
+// }

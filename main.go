@@ -77,11 +77,11 @@ func main() {
 		fmt.Println("===== RENTAL BUKU =====")
 		fmt.Println("")
 		fmt.Println("1.Login")
-		fmt.Println("2.Update Profile(login)")
-		fmt.Println("3.Hapus Profile(login)")
-		fmt.Println("4.Buku Saya")
+		fmt.Println("2.Update Profile(Login)")
+		fmt.Println("3.Hapus Profile(Login)")
+		fmt.Println("4.Buku Saya (Login)")
 		fmt.Println("5.Daftar Buku")
-		fmt.Println("6.Pinjam Buku (login)")
+		fmt.Println("6.Pinjam Buku (Login)")
 		fmt.Println("7.Register")
 		fmt.Println("8.Logout")
 		fmt.Println("")
@@ -95,7 +95,7 @@ func main() {
 			var login model.User
 			fmt.Print("Username : ")
 			fmt.Scanln(&login.Username)
-			fmt.Print("Password :")
+			fmt.Print("Password : ")
 			fmt.Scanln(&login.Password)
 			res, _ := userControll.Login(login.Username, login.Password)
 			count := len(res)
@@ -158,6 +158,7 @@ func main() {
 					fmt.Println("gagal Delete")
 				} else {
 					fmt.Println("Delete Berhasil")
+					session.ID = 0
 					time.Sleep(3 * time.Second)
 					Clear()
 				}
@@ -219,6 +220,7 @@ func main() {
 						fmt.Println("Error insert buku", err.Error())
 					} else {
 						fmt.Println("Buku berhasil ditambahkan!")
+						pilih = 9
 						time.Sleep(3 * time.Second)
 						Clear()
 					}
@@ -239,6 +241,7 @@ func main() {
 						fmt.Println("Error update buku", err.Error())
 					} else {
 						fmt.Println("Buku berhasil diupdate!")
+						pilih = 9
 						time.Sleep(3 * time.Second)
 						Clear()
 					}
@@ -251,6 +254,7 @@ func main() {
 						fmt.Println("Error hapus", err.Error())
 					} else {
 						fmt.Println("Buku berhasil dihapus!")
+						pilih = 9
 						time.Sleep(3 * time.Second)
 						Clear()
 					}
@@ -293,14 +297,14 @@ func main() {
 			for bukuRent {
 				var pilih int
 				res, _ := rentControll.GetAll()
-				fmt.Println("\t===== DAFTAR BUKU TERSEDIA =====")
+				fmt.Println("\t===== DAFTAR BUKU SEDANG DIPINJAM =====")
 				fmt.Print("No")
 				fmt.Print("\tKode")
 				fmt.Print("\tJudul")
 				fmt.Print("\t\tPemilik\n")
 				for i := 0; i < len(res); i++ {
 					fmt.Print(i + 1)
-          fmt.Print("\t", res[i].Id)
+          			fmt.Print("\t", res[i].Id)
 					fmt.Print("\t", res[i].Judul)
 					fmt.Println("\t", res[i].Nama)
 				}
@@ -312,53 +316,34 @@ func main() {
 				fmt.Print("Masukkan Pilihan : ")
 				fmt.Scanln(&pilih)
 				fmt.Println("")
+
 				if pilih == 1 {
 					var book uint
-          fmt.Print("Kode Buku : ")
-          fmt.Scanln(&book)
-          fmt.Println("")
-          // CEK BUKU SUDAH DIPINJAM ?
-          res := rentControll.CekRent(book)
-          if res != true {
-            fmt.Println("Buku sudah dipinjam!")
-              fmt.Println("")
-              time.Sleep(2 * time.Second)
-              Clear()
-            } else {
+					fmt.Print("Kode Buku : ")
+					fmt.Scanln(&book)
+					fmt.Println("")
+					// CEK BUKU SUDAH DIPINJAM ?
+					res := rentControll.CekRent(book)
+					if res != true {
+						fmt.Println("Buku sudah dipinjam!")
+						fmt.Println("")
+						time.Sleep(2 * time.Second)
+						Clear()
+					} else {
 						userId := session.ID
 						_, err := rentControll.AddRent(book, userId)
 						if err != nil {
 							fmt.Println("Gagal input rent")
 						}
 						fmt.Println("Buku berhasil dipinjam!")
-						bukuRent = false
 						time.Sleep(2 * time.Second)
 						Clear()
 					}
 				} else if pilih == 2 {
 					// PENGEMBALIAN BUKU
-					var update model.Rent
-					fmt.Print("Kode Buku : ")
-					fmt.Scanln(&update.Id_buku)
-					fmt.Println("")
-					// CEK BUKU SUDAH DIPINJAM ?
-					// update.Tgl_kembali = session.
-					_, cek := rentControll.UpdateTgl(update.Id_buku)
-					if cek != nil {
-						fmt.Println("Buku sudah dikembalikan!!!")
-						fmt.Println("")
-						time.Sleep(2 * time.Second)
-						Clear()
-					}
-				} else {
-					bukuRent = false
-          time.Sleep(2 * time.Second)
-					Clear()
-				}
-			} else if pilih == 2 {
 					var kode uint
 					fmt.Println("")
-					fmt.Println("Kode Buku : ")
+					fmt.Print("Kode Buku : ")
 					fmt.Scanln(&kode)
 					fmt.Println("")
 					res, err := rentControll.KembaliBuku(kode, session.ID)
@@ -367,12 +352,14 @@ func main() {
 					}
 					if res == true {
 						fmt.Println("Pengembalian Berhasil!")
+						time.Sleep(2 * time.Second)
+						Clear()
 					}
-			} else {
-				bukuRent = false
-					Clear()
+				} else {
+					bukuRent = false
+						Clear()
 				}
-			}
+				}
 
 			// UPDATE USER
 		case 7:
@@ -392,7 +379,7 @@ func main() {
 				fmt.Println("gagal register")
 			} else {
 
-				fmt.Println("Update user berhasil")
+				fmt.Println("Registrasi user berhasil")
 				time.Sleep(3 * time.Second)
 				Clear()
 			}

@@ -29,17 +29,17 @@ func (rc RentController) GetAll() ([]model.DetailRent, error) {
 }
 
 
-func (rc RentController) CekRent(bookId uint) bool{
-var finalRes []model.Rent
-	for i := 0; i < len(res); i++ {
-		kembali := res[i]
-		if kembali.Tgl_kembali == kembali.Tgl_pinjam {
-			finalRes = append(finalRes, res[i])
-		}
-	}
+// func (rc RentController) CekRent(bookId uint) bool{
+// var finalRes []model.Rent
+// 	for i := 0; i < len(res); i++ {
+// 		kembali := res[i]
+// 		if kembali.Tgl_kembali == kembali.Tgl_pinjam {
+// 			finalRes = append(finalRes, res[i])
+// 		}
+// 	}
 
-	return finalRes, nil
-}
+// 	return finalRes, nil
+// }
 
 func (rc RentController) CekRent(bookId uint) bool {
 	rent, id, err := rc.Model.CekRent(bookId)
@@ -77,11 +77,11 @@ func (rc RentController)  KembaliBuku(idBuku, idUser uint) (bool, error){
 // 	return res, nil
 // }
 
-func (rc RentController) UpdateTgl(id uint) ([]model.Rent, error) {
-	_, err := rc.Model.UpdateTgl(id)
-	if err != nil {
-		return nil, err
-	}
-	return []model.Rent{}, nil
-}
+// func (rc RentController) UpdateTgl(id uint) ([]model.Rent, error) {
+// 	_, err := rc.Model.UpdateTgl(id)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return []model.Rent{}, nil
+// }
 
