@@ -46,14 +46,14 @@ func Register() (nama, email, password string) {
 	return na, em, pas
 }
 
-func Clear(){
+func Clear() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
 func main() {
-  Clear()
+	Clear()
 	var isRunning bool = true
 	conn, err := conn()
 	if err != nil {
@@ -243,20 +243,20 @@ func main() {
 						Clear()
 					}
 				} else if pilih == 3 {
-          var buku model.Buku
-              fmt.Print("Kode Buku : ")
-              fmt.Scanln(&buku.ID)
-              _, err := bukuControll.DeleteBuku(buku.ID)
-              if err != nil {
-                fmt.Println("Error hapus", err.Error())
-              } else {
-                fmt.Println("Buku berhasil dihapus!")
-                time.Sleep(3 * time.Second)
-                Clear()
-              }
-          } else if pilih == 9 {
-            bukuSaya = false
-            Clear()
+					var buku model.Buku
+					fmt.Print("Kode Buku : ")
+					fmt.Scanln(&buku.ID)
+					_, err := bukuControll.DeleteBuku(buku.ID)
+					if err != nil {
+						fmt.Println("Error hapus", err.Error())
+					} else {
+						fmt.Println("Buku berhasil dihapus!")
+						time.Sleep(3 * time.Second)
+						Clear()
+					}
+				} else if pilih == 9 {
+					bukuSaya = false
+					Clear()
 				}
 			}
 
@@ -268,19 +268,21 @@ func main() {
 			}
 			fmt.Print("No")
 			fmt.Print("\tKode")
-			fmt.Print("\tJudul")
 			fmt.Print("\tPenulis")
-			fmt.Println("\tPenerbit")
+			fmt.Print("\tPenerbit")
+			fmt.Print("\tJudul")
+			fmt.Println("\tPemilik")
 			for i := 0; i < len(res); i++ {
-			fmt.Print(i + 1)
-			fmt.Print("\t", res[i].ID)
-			fmt.Print("\t", res[i].Judul)
-			fmt.Print("\t", res[i].Penulis)
-			fmt.Println("\t", res[i].Penerbit)
-		}
-      
-      // PINJAM BUKU
-		  case 6:
+				fmt.Print(i + 1)
+				fmt.Print("\t", res[i].Id)
+				fmt.Print("\t", res[i].Penulis)
+				fmt.Print("\t", res[i].Penerbit)
+				fmt.Print("\t", res[i].Judul)  //
+				fmt.Println("\t", res[i].Nama) //
+			}
+
+			// PINJAM BUKU
+		case 6:
 			var bukuRent = true
 			if session.ID == 0 {
 				bukuRent = false
@@ -298,11 +300,9 @@ func main() {
 				fmt.Print("\t\tPemilik\n")
 				for i := 0; i < len(res); i++ {
 					fmt.Print(i + 1)
-					fmt.Print("\t", res[i].Id)
+          fmt.Print("\t", res[i].Id)
 					fmt.Print("\t", res[i].Judul)
 					fmt.Println("\t", res[i].Nama)
-						// QUERY JOIN
-
 				}
 				fmt.Println("")
 				fmt.Println("====== Sub Menu ======")
@@ -313,26 +313,46 @@ func main() {
 				fmt.Scanln(&pilih)
 				fmt.Println("")
 				if pilih == 1 {
-				var book uint
-				fmt.Print("Kode Buku : ")
-				fmt.Scanln(&book)
-				fmt.Println("")
-				// CEK BUKU SUDAH DIPINJAM ?
-				res := rentControll.CekRent(book)
-				if res != true {
-					fmt.Println("Buku sudah dipinjam!")
-					fmt.Println("")
-					time.Sleep(2 * time.Second)
-					Clear()
-				} else {
-					userId := session.ID
-					_, err := rentControll.AddRent(book, userId)
-					if err != nil {
-						fmt.Println("Gagal input rent")
+					var book uint
+          fmt.Print("Kode Buku : ")
+          fmt.Scanln(&book)
+          fmt.Println("")
+          // CEK BUKU SUDAH DIPINJAM ?
+          res := rentControll.CekRent(book)
+          if res != true {
+            fmt.Println("Buku sudah dipinjam!")
+              fmt.Println("")
+              time.Sleep(2 * time.Second)
+              Clear()
+            } else {
+						userId := session.ID
+						_, err := rentControll.AddRent(book, userId)
+						if err != nil {
+							fmt.Println("Gagal input rent")
+						}
+						fmt.Println("Buku berhasil dipinjam!")
+						bukuRent = false
+						time.Sleep(2 * time.Second)
+						Clear()
 					}
-					fmt.Println("Buku berhasil dipinjam!")
+				} else if pilih == 2 {
+					// PENGEMBALIAN BUKU
+					var update model.Rent
+					fmt.Print("Kode Buku : ")
+					fmt.Scanln(&update.Id_buku)
+					fmt.Println("")
+					// CEK BUKU SUDAH DIPINJAM ?
+					// update.Tgl_kembali = session.
+					_, cek := rentControll.UpdateTgl(update.Id_buku)
+					if cek != nil {
+						fmt.Println("Buku sudah dikembalikan!!!")
+						fmt.Println("")
+						time.Sleep(2 * time.Second)
+						Clear()
+					}
+				} else {
 					bukuRent = false
-					time.Sleep(2 * time.Second)
+          time.Sleep(2 * time.Second)
 					Clear()
 				}
 			} else if pilih == 2 {
@@ -353,8 +373,8 @@ func main() {
 					Clear()
 				}
 			}
-      
-      		// UPDATE USER
+
+			// UPDATE USER
 		case 7:
 			var user model.User
 			fmt.Print("Nama : ")

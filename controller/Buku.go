@@ -6,16 +6,16 @@ type BukuController struct {
 	Model model.BukuModel
 }
 
-func (bc BukuController) GetAll() ([]model.Buku, error){
+func (bc BukuController) GetAll() ([]model.Detail, error) {
 	res, err := bc.Model.GetAll()
 	if err != nil {
-		return nil, err
+		return res, nil
 	}
 	return res, nil
 }
 
 func (bc BukuController) TambahBuku(buku model.Buku) (model.Buku, error) {
-	res, err := bc.Model.TambahBuku(buku) 
+	res, err := bc.Model.TambahBuku(buku)
 	if err != nil {
 		return model.Buku{}, err
 	}
@@ -23,7 +23,7 @@ func (bc BukuController) TambahBuku(buku model.Buku) (model.Buku, error) {
 }
 
 func (bc BukuController) UpdateBuku(buku model.Buku) (model.Buku, error) {
-	res, err := bc.Model.UpdateBuku(buku) 
+	res, err := bc.Model.UpdateBuku(buku)
 	if err != nil {
 		return model.Buku{}, err
 	}
@@ -31,7 +31,7 @@ func (bc BukuController) UpdateBuku(buku model.Buku) (model.Buku, error) {
 }
 
 // LIHAT SEMUA BUKU SAYA
-func (bc BukuController) MyBook(id uint) ([]model.Buku, error){
+func (bc BukuController) MyBook(id uint) ([]model.Buku, error) {
 	res, err := bc.Model.MyBook(id)
 	if err != nil {
 		return nil, err
@@ -39,8 +39,8 @@ func (bc BukuController) MyBook(id uint) ([]model.Buku, error){
 	return res, nil
 }
 
-func(bc BukuController) DeleteBuku(id uint) (model.Buku, error) {
-	res, err := bc.Model.DeleteBuku(id) 
+func (bc BukuController) DeleteBuku(id uint) (model.Buku, error) {
+	res, err := bc.Model.DeleteBuku(id)
 	if err != nil {
 		return model.Buku{}, err
 	}

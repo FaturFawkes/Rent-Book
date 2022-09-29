@@ -6,21 +6,33 @@ import (
 
 type Buku struct {
 	gorm.Model
-	ID_user    uint   `gorm:"type:int(11)"`
-	Judul      string `gorm:"type:varchar(50)"` 
-	Penulis    string `gorm:"type:varchar(255)"`
-	Penerbit   string `gorm:"type:varchar(50)"`
-	Th_terbit  string `gorm:"type:char(4)"`
-	Rents []Rent `gorm:"foreignKey:Id_buku"`
+	ID_user   uint   `gorm:"type:int(11)"`
+	Judul     string `gorm:"type:varchar(50)"`
+	Penulis   string `gorm:"type:varchar(255)"`
+	Penerbit  string `gorm:"type:varchar(50)"`
+	Th_terbit string `gorm:"type:char(4)"`
+	Rents     []Rent `gorm:"foreignKey:Id_buku"`
+}
+
+type Detail struct {
+	Id       uint
+	Penulis  string
+	Penerbit string
+	Judul    string
+	Nama     string
 }
 
 type BukuModel struct {
-	 DB *gorm.DB
+	DB *gorm.DB
 }
 
-func (bm BukuModel) GetAll() ([]Buku, error) {
-	var res []Buku
-	err := bm.DB.Find(&res).Error
+func (bm BukuModel) GetAll() ([]Detail, error) {
+	var res []Detail
+	// sudah berhasil
+	err := bm.DB.Table("bukus").Select("bukus.id, bukus.penulis, bukus.penerbit, bukus.judul, users.nama").Table("bukus").
+		Joins("left join users on bukus.id_user = users.id").Where("bukus.deleted_at is null").
+		Scan(&res).Error
+
 	if err != nil {
 		return nil, err
 	}
