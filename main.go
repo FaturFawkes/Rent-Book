@@ -270,15 +270,17 @@ func main() {
 			}
 			fmt.Print("No")
 			fmt.Print("\tKode")
-			fmt.Print("\tJudul")
 			fmt.Print("\tPenulis")
-			fmt.Println("\tPenerbit")
+			fmt.Print("\tPenerbit")
+			fmt.Print("\tJudul")
+			fmt.Println("\tPemilik")
 			for i := 0; i < len(res); i++ {
 				fmt.Print(i + 1)
-				fmt.Print("\t", res[i].ID)
-				fmt.Print("\t", res[i].Judul)
+				fmt.Print("\t", res[i].Id)
 				fmt.Print("\t", res[i].Penulis)
-				fmt.Println("\t", res[i].Penerbit)
+				fmt.Print("\t", res[i].Penerbit)
+				fmt.Print("\t", res[i].Judul)
+				fmt.Println("\t", res[i].Nama)
 			}
 
 			// PINJAM BUKU
@@ -355,17 +357,6 @@ func main() {
 						time.Sleep(2 * time.Second)
 						Clear()
 					}
-					// } else {
-					// 	userId := session.ID
-					// 	_, err := rentControll.AddRent(update.Id_buku, userId)
-					// 	if err != nil {
-					// 		fmt.Println("Gagal kembalikan rent")
-					// 	}
-					// 	fmt.Println("Buku berhasil dikembalikan!!!")
-					// 	bukuRent = false
-					// 	time.Sleep(2 * time.Second)
-					// 	Clear()
-					// }
 				} else {
 					bukuRent = false
 					Clear()
