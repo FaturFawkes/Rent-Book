@@ -131,8 +131,6 @@ func main() {
 				fmt.Scanln(&update.Email)
 				fmt.Print("Alamat : ")
 				fmt.Scanln(&update.Alamat)
-				fmt.Print("Status : ")
-				fmt.Scanln(&update.Status)
 				update.ID = session.ID
 				_, err := userControll.Update(update)
 				if err != nil {
@@ -292,20 +290,17 @@ func main() {
 			}
 			for bukuRent {
 				var pilih int
-				// var sessId = session.ID
 				res, _ := rentControll.GetAll()
-				fmt.Println("\t===== DAFTAR BUKU SEDANG DIPINJAM =====")
+				fmt.Println("\t===== DAFTAR BUKU TERSEDIA =====")
 				fmt.Print("No")
 				fmt.Print("\tKode")
 				fmt.Print("\tJudul")
 				fmt.Print("\t\tPemilik\n")
-
 				for i := 0; i < len(res); i++ {
 					fmt.Print(i + 1)
-					fmt.Print("\t", res[i].Id_buku)
-					fmt.Print("\t", res[i].Id_buku)
-					fmt.Println("\t", res[i].Id_user)
-
+					fmt.Print("\t", res[i].Id)
+					fmt.Print("\t", res[i].Judul)
+					fmt.Println("\t", res[i].Nama)
 						// QUERY JOIN
 
 				}
@@ -323,8 +318,8 @@ func main() {
 				fmt.Scanln(&book)
 				fmt.Println("")
 				// CEK BUKU SUDAH DIPINJAM ?
-				cek := rentControll.CekRent(book)
-				if cek != true {
+				res := rentControll.CekRent(book)
+				if res != true {
 					fmt.Println("Buku sudah dipinjam!")
 					fmt.Println("")
 					time.Sleep(2 * time.Second)
@@ -341,7 +336,18 @@ func main() {
 					Clear()
 				}
 			} else if pilih == 2 {
-				// PENGEMBALIAN BUKU
+					var kode uint
+					fmt.Println("")
+					fmt.Println("Kode Buku : ")
+					fmt.Scanln(&kode)
+					fmt.Println("")
+					res, err := rentControll.KembaliBuku(kode, session.ID)
+					if err != nil {
+						fmt.Println("Pengembalian gagal!")
+					}
+					if res == true {
+						fmt.Println("Pengembalian Berhasil!")
+					}
 			} else {
 				bukuRent = false
 					Clear()
@@ -361,8 +367,6 @@ func main() {
 			fmt.Scanln(&user.Email)
 			fmt.Print("Alamat : ")
 			fmt.Scanln(&user.Alamat)
-			fmt.Print("Status : ")
-			fmt.Scanln(&user.Status)
 			_, err := userControll.Insert(user)
 			if err != nil {
 				fmt.Println("gagal register")

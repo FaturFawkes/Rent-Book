@@ -12,7 +12,6 @@ type User struct {
 	Password string `gorm:"type:varchar(20)"`
 	Email    string `gorm:"type:varchar(50)"`
 	Alamat   string `gorm:"type:varchar(255)"`
-	Status   string
 	Bukus    []Buku `gorm:"foreignKey:ID_user"`
 	Rents    []Rent `gorm:"foreignKey:Id_user"`
 }
