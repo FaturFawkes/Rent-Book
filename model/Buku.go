@@ -28,9 +28,9 @@ type BukuModel struct {
 
 func (bm BukuModel) GetAll() ([]Detail, error) {
 	var res []Detail
-
-	err := bm.DB.Select("bukus.id, bukus.penulis, bukus.penerbit, bukus.judul, users.nama").Table("bukus").
-		Joins("left join users on bukus.id_user = users.id").
+	// sudah berhasil
+	err := bm.DB.Table("bukus").Select("bukus.id, bukus.penulis, bukus.penerbit, bukus.judul, users.nama").Table("bukus").
+		Joins("left join users on bukus.id_user = users.id").Where("bukus.deleted_at is null").
 		Scan(&res).Error
 
 	if err != nil {

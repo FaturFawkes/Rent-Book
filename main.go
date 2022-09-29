@@ -279,8 +279,8 @@ func main() {
 				fmt.Print("\t", res[i].Id)
 				fmt.Print("\t", res[i].Penulis)
 				fmt.Print("\t", res[i].Penerbit)
-				fmt.Print("\t", res[i].Judul)
-				fmt.Println("\t", res[i].Nama)
+				fmt.Print("\t", res[i].Judul)  //
+				fmt.Println("\t", res[i].Nama) //
 			}
 
 			// PINJAM BUKU
