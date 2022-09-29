@@ -10,11 +10,11 @@ type RentController struct {
 }
 
 func (rc RentController) AddRent(bookId, userId uint) (model.Rent, error) {
-	res, err := rc.Model.AddRent(bookId, userId )
+	res, err := rc.Model.AddRent(bookId, userId)
 	if err != nil {
 		return model.Rent{}, err
-  }
-  return res, nil
+	}
+	return res, nil
 }
 
 func (rc RentController) GetAll() ([]model.Rent, error) {
@@ -22,7 +22,7 @@ func (rc RentController) GetAll() ([]model.Rent, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// CEK BUKU SUDAH DIKEMBALIKAN ?
 
 	var finalRes []model.Rent
@@ -31,12 +31,12 @@ func (rc RentController) GetAll() ([]model.Rent, error) {
 		if kembali.Tgl_kembali == kembali.Tgl_pinjam {
 			finalRes = append(finalRes, res[i])
 		}
-	} 
-	
+	}
+
 	return finalRes, nil
 }
 
-func (rc RentController) CekRent(bookId uint) bool{
+func (rc RentController) CekRent(bookId uint) bool {
 	rent, id, err := rc.Model.CekRent(bookId)
 	if err != nil {
 		fmt.Println("error rent ln 27")
@@ -51,4 +51,12 @@ func (rc RentController) CekRent(bookId uint) bool{
 	}
 
 	return true
+}
+
+func (rc RentController) UpdateTgl(id uint) ([]model.Rent, error) {
+	_, err := rc.Model.UpdateTgl(id)
+	if err != nil {
+		return nil, err
+	}
+	return []model.Rent{}, nil
 }
