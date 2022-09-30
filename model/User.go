@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-
 	"gorm.io/gorm"
 )
 
