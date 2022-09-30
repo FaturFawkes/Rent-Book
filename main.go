@@ -7,7 +7,6 @@ import (
 	"rentbook/controller"
 	"rentbook/model"
 	"time"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -28,11 +27,17 @@ func conn() (*gorm.DB, error) {
 	return db, nil
 }
 
-func Logout() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
+// func Logout() {
+// 	cmd := exec.Command("clear")
+// 	cmd.Stdout = os.Stdout
+// 	cmd.Run()
+// }
+
+// func Relog() {
+// 	cmd := exec.Command("go run .")
+// 	cmd.Stdout = os.Stdout
+// 	cmd.Run()
+// }
 
 func Register() (nama, email, password string) {
 	var na, em, pas string
@@ -60,7 +65,7 @@ func main() {
 		fmt.Println("error", err.Error())
 	}
 
-	migrate(conn)
+	// migrate(con
 
 	// SET MODEL CONTROLLER
 	session := model.User{}
@@ -74,7 +79,7 @@ func main() {
 	for isRunning {
 		var inputMenu int
 		fmt.Println("")
-		fmt.Println("===== RENTAL BUKU =====")
+		fmt.Println("===== RENT BOOK APP =====")
 		fmt.Println("")
 		fmt.Println("1.Login")
 		fmt.Println("2.Update Profile(Login)")
@@ -101,12 +106,12 @@ func main() {
 			count := len(res)
 			if count == 0 {
 				fmt.Println("++++ Username atau password salah ++++")
-				time.Sleep(3 * time.Second)
+				time.Sleep(2 * time.Second)
 				Clear()
 			} else {
 				session = res[0]
 				fmt.Println("++++ Login Berhasil! ++++")
-				time.Sleep(3 * time.Second)
+				time.Sleep(2 * time.Second)
 				Clear()
 			}
 
@@ -270,6 +275,8 @@ func main() {
 			if err != nil {
 				fmt.Print("Gagal ambil data buku", err.Error())
 			}
+			fmt.Println("\t===== DAFTAR SELURUH BUKU =====")
+			fmt.Println()
 			fmt.Print("No")
 			fmt.Print("\tKode")
 			fmt.Print("\tPenulis")
@@ -298,6 +305,7 @@ func main() {
 				var pilih int
 				res, _ := rentControll.GetAll()
 				fmt.Println("\t===== DAFTAR BUKU SEDANG DIPINJAM =====")
+				fmt.Println()
 				fmt.Print("No")
 				fmt.Print("\tKode")
 				fmt.Print("\tJudul")
@@ -388,9 +396,10 @@ func main() {
 		case 8:
 			session = model.User{}
 			fmt.Println("Terima Kasih")
-			time.Sleep(3 * time.Second)
-			Logout()
-
+			time.Sleep(2 * time.Second)
+			Clear()
+		default:
+			Clear()
 		}
 	}
 }

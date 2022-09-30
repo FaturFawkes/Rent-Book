@@ -2,7 +2,6 @@ package model
 
 import (
 	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -37,9 +36,7 @@ func (rm RentModel) GetAll() ([]DetailRent, error) {
 			Table("bukus").Joins("left join rents on rents.id_buku = bukus.id") .
 			Joins("left join users on users.id = bukus.id_user").Where("rents.status", "").
 			Scan(&res).Error
-	// if err1 != nil {
-	// 	return nil, err1
-	// }
+
 	if err2 != nil {
 		return nil, err2
 	}

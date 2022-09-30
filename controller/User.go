@@ -2,7 +2,6 @@ package controller
 
 import (
 	"rentbook/model"
-	// "golang.org/x/text/date"
 )
 
 type UserController struct {
